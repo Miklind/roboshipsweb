@@ -70,10 +70,52 @@ export default function SVGProgramCommand({ ship, scale, command, scrollPos, con
                 y1={scaledToSVG(-scrollPos.y + command.position.y)}
                 x2={scaledToSVG(-scrollPos.x + connectionTargetX)}
                 y2={scaledToSVG(-scrollPos.y + connectionTargetY)}
-                stroke={highlighted ? "lightgray" : "black"}
+                stroke={highlighted ? "lightgray" : numconnetions===1 ? "black" : index===0 ? "green" : "red"}
                 strokeWidth={scaledToSVG(0.75)}
             />)
 
+
+        // Arrow
+
+        if(connection !== -1)
+        {
+
+        const xdiff=connectionTargetX - command.position.x;
+        const ydiff=connectionTargetY - command.position.y;
+
+        const lenght=Math.sqrt(xdiff*xdiff + ydiff*ydiff);
+        const xNorm=xdiff/lenght;
+        const yNorm=ydiff/lenght;
+
+        const sideWaysX=yNorm;
+        const sideWaysY=-xNorm
+
+        const arrowEndCenterX=command.position.x + xNorm * (lenght/2 - 1.5);
+        const arrowEndCenterY=command.position.y + yNorm * (lenght/2 - 1.5);
+
+        const arrowStartCenterX=command.position.x + xNorm * (lenght/2 + 1.5);
+        const arrowStartCenterY=command.position.y + yNorm * (lenght/2 + 1.5);
+
+        items.push(
+            <line key={`connectionArrowA${command.id}-${index}`}
+                x1={scaledToSVG(-scrollPos.x + arrowStartCenterX)}
+                y1={scaledToSVG(-scrollPos.y + arrowStartCenterY)}
+                x2={scaledToSVG(-scrollPos.x + arrowEndCenterX + sideWaysX * 2)}
+                y2={scaledToSVG(-scrollPos.y + arrowEndCenterY + sideWaysY * 2)}
+                stroke={highlighted ? "lightgray" : numconnetions===1 ? "black" : index===0 ? "green" : "red"}
+                strokeWidth={scaledToSVG(0.75)}
+            />)
+
+        items.push(
+            <line key={`connectionArrowB${command.id}-${index}`}
+                x1={scaledToSVG(-scrollPos.x + arrowStartCenterX)}
+                y1={scaledToSVG(-scrollPos.y + arrowStartCenterY)}
+                x2={scaledToSVG(-scrollPos.x + arrowEndCenterX - sideWaysX * 2)}
+                y2={scaledToSVG(-scrollPos.y + arrowEndCenterY - sideWaysY * 2)}
+                stroke={highlighted ? "lightgray" : numconnetions===1 ? "black" : index===0 ? "green" : "red"}
+                strokeWidth={scaledToSVG(0.75)}
+            />)
+        }
 
         if (connection === -1) items.push(
 
