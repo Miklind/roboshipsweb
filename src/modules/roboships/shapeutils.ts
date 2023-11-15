@@ -1,3 +1,5 @@
+import { Result } from "postcss";
+
 export interface IPoint {
   x: number;
   y: number;
@@ -28,4 +30,31 @@ export function isPointInsideRect(point: IPoint, rectCenter: IPoint, rectWidth:n
     const halfHeight = rectHeight / 2
     
     return point.x >= rectCenter.x - halfWidth && point.x <= rectCenter.x + halfWidth && point.y >= rectCenter.y - halfHeight && point.y <= rectCenter.y + halfHeight
+}
+
+export function calculateCenterArrowPoints(from: IPoint, to: IPoint ) : IPoint[]
+{
+  let result: IPoint[] = []
+
+  const xdiff = to.x - from.x;
+  const ydiff = to.y - from.y;
+
+  const lenght = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
+  const xNorm = xdiff / lenght;
+  const yNorm = ydiff / lenght;
+
+  const sideWaysX = yNorm;
+  const sideWaysY = -xNorm
+
+  const arrowEndCenterX = from.x + xNorm * (lenght / 2 - 1.5);
+  const arrowEndCenterY = from.y + yNorm * (lenght / 2 - 1.5);
+
+  const arrowStartCenterX = from.x + xNorm * (lenght / 2 + 1.5);
+  const arrowStartCenterY = from.y + yNorm * (lenght / 2 + 1.5);
+
+  result.push({ x: arrowStartCenterX, y: arrowStartCenterY })
+  result.push({ x: arrowEndCenterX + sideWaysX * 2, y: arrowEndCenterY + sideWaysY * 2 })  
+  result.push({ x: arrowEndCenterX - sideWaysX * 2, y: arrowEndCenterY - sideWaysY * 2 })
+
+  return result
 }
