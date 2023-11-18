@@ -1,6 +1,11 @@
 import React, { useRef, useState, useContext, useEffect, useMemo } from 'react';
 import { IShip } from '@/modules/roboships/ship';
-import ShipStateContext,  { IRoboshipsMoveShipCommandAction, IProgramComponentToAdd, IRoboshipsAddProgramComponentAction, IRoboshipsConnectShipCommandAction}  from '@/modules/shipstatecontext';
+import ShipStateContext,  { IRoboshipsMoveShipCommandAction, 
+                            IProgramComponentToAdd, 
+                            IRoboshipsAddProgramComponentAction, 
+                            IRoboshipsConnectShipCommandAction,
+                            IRoboshipsDeleteShipCommandAction,
+                            IRoboshipsDisconnectShipCommandAction}  from '@/modules/shipstatecontext';
 import SVGGrid from './SVGGrid';
 import { useDebouncedCallback } from 'use-debounce';
 import SVGProgram from './SVGProgram';
@@ -8,7 +13,7 @@ import { commandHeight, commandWidth } from './SVGProgramCommand';
 import { ISelectedConnection } from './SVGProgramCommand';
 import { isPointInsideRect } from '@/modules/roboships/shapeutils';
 import SVGScrollBars from './SVGScrollBars';
-
+import ProgramCommandMenu from './ProgramCommandMenu';
 
 interface ILayoutSVGProps {
     selectedShipID: number
@@ -29,7 +34,10 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
     const [svgScrollPos, setSVGScrollPos] = useState({ x: 0, y: 0 })
     const [svgIsMouseDown, setSVGIsMouseDown] = useState(false)
     const [selectedConnection, setSelectedConnection] = useState<ISelectedConnection | null>(null)
-    
+    const [showProgramCommandMenu, setShowProgramCommandMenu] = useState(false)
+    const [menuTargetCommandId, setMenuTargetCommandId] = useState(-1)
+    const [menuPosition, setMenuPosition] = useState({x: 0, y: 0})
+
     const debouncedUpdateDimensions = useDebouncedCallback(        
         () => {
             updateDimensions()
@@ -192,10 +200,49 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
 
         return { x: Math.round(x), y: Math.round(y) }
     }    
+
+    function onExecuteMenuCommand(menuTargetCommandId: number, menuCommand: string ) 
+    {
+      
+
+        const command= ship?.program.find((command) => command.id === menuTargetCommandId)
+
+        if(command !== undefined) 
+        {
+            switch(menuCommand)
+            {
+                case 'delete':
+                    const action: IRoboshipsDeleteShipCommandAction = { actionType: 'delete-program-command', shipID: selectedShipID, commandID: menuTargetCommandId }
+                    dispatch(action)
+                    break;
+                case 'disconnect':
+                    const action2: IRoboshipsDisconnectShipCommandAction = { actionType: 'disconnect-program-command', shipID: selectedShipID, commandID: menuTargetCommandId }
+                    dispatch(action2)
+                    break;
+                default:
+            }
+        }
+            
+
+        setShowProgramCommandMenu(false)
+    }
+
+    function openCommandContextMenu(commandId: number)
+    {
+        if(ship === null) return;        
+        const command = ship.program.find((command) => command.id === commandId)
+        if(command === undefined) return;            
+        const position = {x: command.position.x * svgScale - svgScrollPos.x * svgScale, y: command.position.y * svgScale - svgScrollPos.y * svgScale}
+        
+        setMenuPosition(position)
+        setMenuTargetCommandId(commandId)
+        setShowProgramCommandMenu(true)                    
+    }
+
     return (
     
-        <div className='bg-sky-300 max-h-full flex-grow  relative' ref={svgDivRef} >
-            <svg className='bg-sky-300 absolute h-auto' 
+        <div className='bg-sky-300 max-h-full flex-grow relative' ref={svgDivRef} >            
+            <svg className='bg-sky-300 absolute' 
                 viewBox={`0 0 ${svgSize.width} ${svgSize.height}`} 
                 onMouseMove={mouseMoveSVG} 
                 onMouseUp={ onMouseUpSVG } 
@@ -209,11 +256,16 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
                                                itemSelected={(itemType, itemId)=>{setSelectedItemType(itemType); setSelectedItemID(itemId) }}
                                                connectionSelected={(selectedConnection)=> setSelectedConnection(selectedConnection) }
                                                selectedConnection={selectedConnection}
+                                               openContextMenu={ (commandId) => openCommandContextMenu(commandId)} 
                                                
                 /> }
 
                 <SVGScrollBars height={svgSize.height} width={svgSize.width} maxHeight={scrollSizeY} maxWidth={scrollSizeX} scale={svgScale} scrollPos={svgScrollPos} />
             </svg>
+            {showProgramCommandMenu && <ProgramCommandMenu menuTargetCommandId={menuTargetCommandId} 
+                                                           onExecuteMenuCommand={ (target,command) => onExecuteMenuCommand(target, command)} 
+                                                           position={menuPosition} 
+                                                           closeMenu={() => setShowProgramCommandMenu(false)} />}
         </div>
       
     )

@@ -73,6 +73,19 @@ export interface IRoboshipsState {
     shipToAdd: IShip
   }
 
+  export interface IRoboshipsDeleteShipCommandAction extends IRoboshipsStateAction {
+      actionType: 'delete-program-command' 
+      shipID: number 
+      commandID: number
+  }
+
+       
+  export interface IRoboshipsDisconnectShipCommandAction extends IRoboshipsStateAction { 
+      actionType: 'disconnect-program-command'
+      shipID: number
+      commandID: number 
+  }
+
     
   function GetCompomentSortValue(componentType: string): number {
     switch (componentType) {
@@ -113,9 +126,83 @@ export interface IRoboshipsState {
       case "add-ship-from-data":
         return performAddShipFromData(state, action);
 
+      case "delete-program-command":
+        return performDeleteProgramCommand(state, action);
+
+      case "disconnect-program-command":
+        return performDisconnectProgramCommand(state, action);
+
+      
+
       default:
         return state;
     }
+  }
+
+  function performDisconnectProgramCommand(state: IRoboshipsState, action: IRoboshipsStateAction): IRoboshipsState
+  {
+    let disconnectShipCommandAction = action as IRoboshipsDisconnectShipCommandAction;
+    let modifiedShips = state.ships.map((ship) => {
+
+      if (ship.id === disconnectShipCommandAction.shipID) {
+        let modifiedCommands = ship.program.map((command) => {
+
+          if(command.connectedTo.find((connection) => connection === disconnectShipCommandAction.commandID))
+          {
+            let modifiedConnections = command.connectedTo.map((connection) => { 
+              if(connection === disconnectShipCommandAction.commandID)
+              {
+                return -1
+              }
+              else
+              {
+                return connection
+              }
+
+            })
+            return { ...command, connectedTo: modifiedConnections }
+          }
+          else
+          {
+            return command
+          }
+
+        })
+
+        return { ...ship, program: modifiedCommands }
+      }
+      else {
+        return ship
+      }
+
+
+    })
+               
+    return { ...state, ships: modifiedShips }
+  }
+
+  function performDeleteProgramCommand(state: IRoboshipsState, action: IRoboshipsStateAction): IRoboshipsState {
+    let deleteShipCommandAction = action as IRoboshipsDeleteShipCommandAction;
+    let modifiedShips = state.ships.map((ship) => {
+      if (ship.id === deleteShipCommandAction.shipID) {
+  
+        let modifiedCommands = ship.program.filter((command) => {
+  
+          if (command.id === deleteShipCommandAction.commandID) {
+            return false
+          }
+          else {
+            return true
+          }
+        })
+        return { ...ship, program: modifiedCommands }
+      }
+      else {
+        return ship
+      }
+    });
+    return { ...state, ships: modifiedShips }
+    
   }
 
   function performConnectProgramCommand(state: IRoboshipsState, action: IRoboshipsStateAction): IRoboshipsState {
@@ -287,8 +374,8 @@ export interface IRoboshipsState {
     });
     return { ...state, ships: modifiedShips }
   }
-
-
+ 
+   
 
 
 

@@ -6,6 +6,7 @@ interface ISVGProgramCommandProps {
     command: IProgramCommand
     scrollPos: {x: number, y: number}
     itemSelected: (itemType: string, itemID: number) => void 
+    openContextMenu: (commandID: number) => void
 
 }
 
@@ -21,7 +22,7 @@ export const commandWidth: number = 32
 export const commandHeight: number = 8
 export const commmandTitleHeight: number = 3
 
-export default function SVGProgramCommand({  scale, command, scrollPos, itemSelected } : ISVGProgramCommandProps ) {
+export default function SVGProgramCommand({  scale, command, scrollPos, itemSelected, openContextMenu } : ISVGProgramCommandProps ) {
 
     function scaledToSVG(n: number): number {
         return n * scale;
@@ -30,11 +31,13 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
     function onCommandContextMenuRect(e: React.MouseEvent<SVGRectElement, MouseEvent>, commandID: number) {
         e.preventDefault();
         e.stopPropagation();        
+        openContextMenu(commandID)
     }
 
     function onCommandContextMenuText(e: React.MouseEvent<SVGTextElement, MouseEvent>, commandID: number) {
         e.preventDefault();
-        e.stopPropagation();        
+        e.stopPropagation();            
+        openContextMenu(commandID)
     }
 
     return (
