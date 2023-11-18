@@ -27,11 +27,14 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
         return n * scale;
     }
 
-    function onCommandContextMenu(e: React.MouseEvent<SVGRectElement, MouseEvent>, commandID: number) {
+    function onCommandContextMenuRect(e: React.MouseEvent<SVGRectElement, MouseEvent>, commandID: number) {
         e.preventDefault();
-        e.stopPropagation();
+        e.stopPropagation();        
+    }
 
-        
+    function onCommandContextMenuText(e: React.MouseEvent<SVGTextElement, MouseEvent>, commandID: number) {
+        e.preventDefault();
+        e.stopPropagation();        
     }
 
     return (
@@ -45,7 +48,7 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 stroke="black" 
                 fill="white" 
                 onMouseDown={(e) => { if(e.button==0) itemSelected('command', command.id) }}
-                onContextMenu={(e) => onCommandContextMenu(e, command.id)}
+                onContextMenu={(e) => onCommandContextMenuRect(e, command.id)}
             />           
             
             <rect 
@@ -56,7 +59,7 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 stroke="black" 
                 fill="lightblue" 
                 onMouseDown={(e) => { if(e.button==0) itemSelected('command',command.id) }}
-                onContextMenu={(e) => onCommandContextMenu(e, command.id)}
+                onContextMenu={(e) => onCommandContextMenuRect(e, command.id)}
             />           
             
             <text className='select-none' 
@@ -67,7 +70,7 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 textAnchor="middle" 
                 dominantBaseline="middle"
                 onMouseDown={(e) => { if(e.button==0) itemSelected('command', command.id) }}
-                onContextMenu={(e) => onCommandContextMenu(e, command.id)}
+                onContextMenu={(e) => onCommandContextMenuText(e, command.id)}
                 >
                     {command.displayTarget ? `${command.targetType}.${command.command}` : command.command }
             </text>
