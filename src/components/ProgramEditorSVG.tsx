@@ -25,7 +25,7 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
     const [svgSize, setSvgSize] = useState({ height: 1, width: 1 })    
     const [selecteItemType, setSelectedItemType] = useState('')
     const [selectedItemID, setSelectedItemID] = useState(-1)
-    const [svgScale, setSVGScale] = useState(10)
+    const [svgScale, setSVGScale] = useState(7)
     const [svgScrollPos, setSVGScrollPos] = useState({ x: 0, y: 0 })
     const [svgIsMouseDown, setSVGIsMouseDown] = useState(false)
     const [selectedConnection, setSelectedConnection] = useState<ISelectedConnection | null>(null)
