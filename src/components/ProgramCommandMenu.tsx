@@ -1,5 +1,4 @@
-import { IShip } from "@/modules/roboships/ship"
-import { IProgramCommand } from "@/modules/roboships/programcomponents"
+
 
 interface ProgramCommandMenuProps {    
     menuTargetCommandId: number
