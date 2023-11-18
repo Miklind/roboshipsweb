@@ -6,15 +6,28 @@ interface SVGShipComponentProps {
     valid: boolean
     scale: number
     componentSelected: (componentID: number) => void
+    openContextMenu: (componentID: number) => void
 }
 
-export default function SVGShipComponent({ shipComponent, valid, scale, componentSelected }: SVGShipComponentProps) {
+export default function SVGShipComponent({ shipComponent, valid, scale, componentSelected, openContextMenu }: SVGShipComponentProps) {
 
     function scaledToSVG(n: number): number {
         return n * scale;
     }
 
     const polygonData = getPolygonData(shipComponent, scale);
+
+    function onCommandContextMenuPoly(e: React.MouseEvent<SVGPolygonElement, MouseEvent>, componentID: number) {
+        e.preventDefault();
+        e.stopPropagation();                               
+        openContextMenu(componentID)
+    }
+
+    function onCommandContextMenuText(e: React.MouseEvent<SVGTextElement, MouseEvent>, componentID: number) {
+        e.preventDefault();
+        e.stopPropagation();            
+        openContextMenu(componentID)       
+    }
 
     return(
     <>
@@ -27,6 +40,7 @@ export default function SVGShipComponent({ shipComponent, valid, scale, componen
             strokeWidth={polygonData.strokeWidth}
             strokeLinejoin='round'
             onMouseDown={(e) => { if(e.button===0) componentSelected(polygonData.id) }}
+            onContextMenu={(e) => onCommandContextMenuPoly(e, shipComponent.id)}
         />
     
 
@@ -40,6 +54,8 @@ export default function SVGShipComponent({ shipComponent, valid, scale, componen
                 textAnchor="middle"
                 dominantBaseline="middle"
                 onMouseDown={(e) => { if(e.button===0) componentSelected(polygonData.id) }}
+                onContextMenu={(e) => onCommandContextMenuText(e, shipComponent.id)}
+
                 >{shipComponent.componentType}
             </text>
             }            

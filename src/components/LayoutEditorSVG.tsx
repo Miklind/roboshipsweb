@@ -1,11 +1,12 @@
 import React, { useRef, useState, useContext, useEffect, useMemo } from 'react';
-import { IRoboshipsAddShipComponentAction, IRoboshipsMoveShipComponentAction } from '@/modules/shipstatecontext';
+import { IRoboshipsAddShipComponentAction, IRoboshipsMoveShipComponentAction, IRoboshipsDeleteShipComponentAction } from '@/modules/shipstatecontext';
 import { IShip } from '@/modules/roboships/ship';
 import { IShipComponent, checkComponentPlacement } from '@/modules/roboships/shipcomponent';
 import ShipStateContext from '@/modules/shipstatecontext';
 import SVGGrid from './SVGGrid';
 import SVGShip from './SVGShip';
 import { useDebouncedCallback } from 'use-debounce';
+import ShipComponentMenu from './ShipComponentMenu';
 
 
 interface ILayoutSVGProps {
@@ -21,6 +22,9 @@ export default function LayoutEditorSVG({ selectedShipID, componentTypeToAdd }: 
     const [svgSize, setSvgSize] = useState({ height: 1, width: 1, scale: 1 })
     const [selectedComponentID, setSelectedComponentID] = useState(-1)
     const [componentMoved, setComponentMoved] = useState(false)
+    const [showComponentMenu, setShowComponentMenu] = useState(false)
+    const [menuTargetComponentId, setMenuTargetComponentId] = useState(-1)
+    const [menuPosition, setMenuPosition] = useState({x: 0, y: 0})
     
     const debouncedUpdateDimensions = useDebouncedCallback(        
         () => {
@@ -107,13 +111,58 @@ export default function LayoutEditorSVG({ selectedShipID, componentTypeToAdd }: 
         return { x: Math.round(x), y: Math.round(y) }
     }
               
+
+    function onExecuteMenuCommand(menuTargetComponentId: number, menuCommand: string ) 
+    {    
+        const component= ship?.shipComponents.find((component) => component.id === menuTargetComponentId)
+
+        if(component !== undefined) 
+        {
+            switch(menuCommand)
+            {
+                case 'delete':
+                    const action: IRoboshipsDeleteShipComponentAction = { actionType: 'delete-ship-component', shipID: selectedShipID, componentID: menuTargetComponentId }
+                    dispatch(action)
+                    setComponentMoved(true)
+                    break;
+            
+                default:
+            }
+        }
+            
+        setShowComponentMenu(false)
+    }
+
+    function openCommandContextMenu(componentId: number)
+    {
+        
+
+        if(ship === null) return;        
+        const component = ship.shipComponents.find((component) => component.id === componentId)
+        if(component === undefined) return;            
+        const position = {x: component.position.x *  svgSize.scale , y: component.position.y * svgSize.scale }
+        
+        setMenuPosition(position)
+        setMenuTargetComponentId(componentId)
+        setShowComponentMenu(true)                    
+    }
+
     return (
         <div className='bg-sky-300 max-h-full flex-grow  relative' ref={svgDivRef} >
             <svg className='bg-sky-300 absolute h-auto' viewBox={`0 0 ${svgSize.width} ${svgSize.height}`} onMouseMove={mouseMoveSVG} onMouseUp={(e) => {if(e.button===0) setSelectedComponentID(-1)} } onMouseLeave={() => setSelectedComponentID(-1)}
                 onDragStart={onDragStartSVG} onDragOver={onDragOverSVG} onDrop={onDragDropSVG} >
                 <SVGGrid height={svgSize.height} width={svgSize.width} scale={svgSize.scale} scrollPos={{ x:0, y:0} } />
-                {ship !== null && <SVGShip scale={svgSize.scale} validComponents={validComponents} ship={ship} componentSelected={(componentID) => setSelectedComponentID(componentID)} />}
+                {ship !== null && <SVGShip scale={svgSize.scale} 
+                                           validComponents={validComponents} 
+                                           ship={ship} 
+                                           componentSelected={(componentID) => setSelectedComponentID(componentID)} 
+                                           openContextMenu={(componentID) => openCommandContextMenu(componentID)}
+                                           />}
             </svg>
+            {showComponentMenu && <ShipComponentMenu menuTargetComponentId={menuTargetComponentId} 
+                                                     onExecuteMenuCommand={ (target,command) => onExecuteMenuCommand(target, command)} 
+                                                     position={menuPosition} 
+                                                     closeMenu={() => setShowComponentMenu(false)} />}
         </div>
     )
 }

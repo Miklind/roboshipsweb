@@ -7,9 +7,10 @@ interface SVGShipProps {
     validComponents: boolean[]
     ship: IShip
     componentSelected: (componentID: number) => void
+    openContextMenu: (componentId: number) => void
 }
 
-export default function SVGShip({ scale, validComponents, ship, componentSelected }: SVGShipProps) {
+export default function SVGShip({ scale, validComponents, ship, componentSelected, openContextMenu }: SVGShipProps) {
 
     function scaledToSVG(n: number): number {
         return n * scale;
@@ -19,7 +20,13 @@ export default function SVGShip({ scale, validComponents, ship, componentSelecte
 
         {ship.shipComponents.map((component, index) => {
             const polygonData = getPolygonData(component, scale);        
-            return <SVGShipComponent key={component.id} shipComponent={component} valid={validComponents[index]} scale={scale} componentSelected={componentSelected} />
+            return <SVGShipComponent key={component.id} 
+                                     shipComponent={component} 
+                                     valid={validComponents[index]} 
+                                     scale={scale} 
+                                     componentSelected={componentSelected} 
+                                     openContextMenu={ (componentId) => { openContextMenu(componentId)}}
+                                     />
         })}
 
     </>)
