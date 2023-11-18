@@ -27,6 +27,13 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
         return n * scale;
     }
 
+    function onCommandContextMenu(e: React.MouseEvent<SVGRectElement, MouseEvent>, commandID: number) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        
+    }
+
     return (
         <>                                
             <rect 
@@ -37,7 +44,8 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 rx={scaledToSVG(1)}  
                 stroke="black" 
                 fill="white" 
-                onMouseDown={() => { itemSelected('command', command.id) }}
+                onMouseDown={(e) => { if(e.button==0) itemSelected('command', command.id) }}
+                onContextMenu={(e) => onCommandContextMenu(e, command.id)}
             />           
             
             <rect 
@@ -47,7 +55,8 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 height={scaledToSVG(commmandTitleHeight)}   
                 stroke="black" 
                 fill="lightblue" 
-                onMouseDown={() => { itemSelected('command',command.id) }}
+                onMouseDown={(e) => { if(e.button==0) itemSelected('command',command.id) }}
+                onContextMenu={(e) => onCommandContextMenu(e, command.id)}
             />           
             
             <text className='select-none' 
@@ -57,7 +66,8 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 fill="black" 
                 textAnchor="middle" 
                 dominantBaseline="middle"
-                onMouseDown={() => { itemSelected('command', command.id) }}
+                onMouseDown={(e) => { if(e.button==0) itemSelected('command', command.id) }}
+                onContextMenu={(e) => onCommandContextMenu(e, command.id)}
                 >
                     {command.displayTarget ? `${command.targetType}.${command.command}` : command.command }
             </text>

@@ -26,7 +26,7 @@ export default function SVGShipComponent({ shipComponent, valid, scale, componen
             stroke={  valid ?  polygonData.strokeColor : 'red'}
             strokeWidth={polygonData.strokeWidth}
             strokeLinejoin='round'
-            onMouseDown={() => { componentSelected(polygonData.id) }}
+            onMouseDown={(e) => { if(e.button===0) componentSelected(polygonData.id) }}
         />
     
 
@@ -39,7 +39,7 @@ export default function SVGShipComponent({ shipComponent, valid, scale, componen
                 fill="black"            
                 textAnchor="middle"
                 dominantBaseline="middle"
-                onMouseDown={() => { componentSelected(polygonData.id) }}
+                onMouseDown={(e) => { if(e.button===0) componentSelected(polygonData.id) }}
                 >{shipComponent.componentType}
             </text>
             }            

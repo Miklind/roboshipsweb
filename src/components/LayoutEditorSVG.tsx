@@ -109,7 +109,7 @@ export default function LayoutEditorSVG({ selectedShipID, componentTypeToAdd }: 
               
     return (
         <div className='bg-sky-300 max-h-full flex-grow  relative' ref={svgDivRef} >
-            <svg className='bg-sky-300 absolute h-auto' viewBox={`0 0 ${svgSize.width} ${svgSize.height}`} onMouseMove={mouseMoveSVG} onMouseUp={() => setSelectedComponentID(-1)} onMouseLeave={() => setSelectedComponentID(-1)}
+            <svg className='bg-sky-300 absolute h-auto' viewBox={`0 0 ${svgSize.width} ${svgSize.height}`} onMouseMove={mouseMoveSVG} onMouseUp={(e) => {if(e.button===0) setSelectedComponentID(-1)} } onMouseLeave={() => setSelectedComponentID(-1)}
                 onDragStart={onDragStartSVG} onDragOver={onDragOverSVG} onDrop={onDragDropSVG} >
                 <SVGGrid height={svgSize.height} width={svgSize.width} scale={svgSize.scale} scrollPos={{ x:0, y:0} } />
                 {ship !== null && <SVGShip scale={svgSize.scale} validComponents={validComponents} ship={ship} componentSelected={(componentID) => setSelectedComponentID(componentID)} />}

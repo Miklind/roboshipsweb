@@ -150,11 +150,13 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
 
     function onMouseDownSVG(e: React.MouseEvent<SVGSVGElement, MouseEvent>) 
     {      
-        setSVGIsMouseDown(true)
+        if(e.button===0) setSVGIsMouseDown(true)
     }
 
     function onMouseUpSVG(e: React.MouseEvent<SVGSVGElement, MouseEvent>) 
     {
+        if(e.button!==0) return
+        
         if(selectedConnection !== null)
         {
             if(ship !== null)

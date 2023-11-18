@@ -101,7 +101,7 @@ export default function SVGProgramCommand({ ship, scale, command, scrollPos, con
                 r={scaledToSVG(2)}
                 fill={highlighted ? "green" : "white"}
                 stroke={highlighted ? "green" : "black"}
-                onMouseDown={() => { connectionSelected({ commandID: command.id, connectionIdx: index, position: { x: connectionTargetX, y: connectionTargetY }, highlighted: false }) }}
+                onMouseDown={(e) => { if(e.button===0)  connectionSelected({ commandID: command.id, connectionIdx: index, position: { x: connectionTargetX, y: connectionTargetY }, highlighted: false }) }}
             />
         )
     })
