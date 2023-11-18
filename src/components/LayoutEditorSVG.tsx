@@ -43,7 +43,7 @@ export default function LayoutEditorSVG({ selectedShipID, componentTypeToAdd }: 
 
     const validComponents: boolean[] = useMemo(
         () => 
-        {
+        {            
             setComponentMoved(false)
             return checkComponentPlacement(ship)
         },

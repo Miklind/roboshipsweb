@@ -5,9 +5,10 @@ interface IFileListProps {
     mode: string
     onClose: () => void
     onFileSelected: (fileName: string) => void
+    selectedName: string
 }
 
-export default function FileList({ mode, onClose, onFileSelected }: IFileListProps) {
+export default function FileList({ mode, onClose, onFileSelected, selectedName }: IFileListProps) {
     
     const [shipFiles, setShipFiles] = useState<string[]>([])
     const [selectedShipFile, setSelectedShipFile] = useState('')
@@ -17,7 +18,7 @@ export default function FileList({ mode, onClose, onFileSelected }: IFileListPro
         .then(response => response.json())
         .then(data => setShipFiles(data));
 
-        if(mode==='save') setSelectedShipFile('untitled.txt')
+        if(mode==='save') setSelectedShipFile( `${selectedName}.json`)
     }, []);
 
     function fileNameEdited(event: React.ChangeEvent<HTMLInputElement>) 

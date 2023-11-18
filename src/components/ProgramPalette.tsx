@@ -13,7 +13,7 @@ export default function ProgramPalette({ onComponentDrag }: IProgramPaletteProps
     }
 
     const paletteItems: [target: string, commmands: ICommmandDefinition[], parameters: IParameterDefinition[]][] = useMemo(() => {
-        
+                
         const targetTypes: Set<string> = new Set();
 
         commandDefs.forEach(command => targetTypes.add(command.targetType));
