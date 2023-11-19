@@ -1,5 +1,5 @@
 import React, { useRef, useState, useContext, useEffect, useMemo } from 'react';
-import { IRoboshipsAddShipComponentAction, IRoboshipsMoveShipComponentAction, IRoboshipsDeleteShipComponentAction } from '@/modules/shipstatecontext';
+import { IRoboshipsAddShipComponentAction, IRoboshipsPositionAction, IRoboshipsNumberAction } from '@/modules/shipstatecontext';
 import { IShip } from '@/modules/roboships/ship';
 import { IShipComponent, checkComponentPlacement } from '@/modules/roboships/shipcomponent';
 import ShipStateContext from '@/modules/shipstatecontext';
@@ -79,7 +79,7 @@ export default function LayoutEditorSVG({ selectedShipID, componentTypeToAdd }: 
 
         let position = ScaleAndSnap(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
 
-        const action: IRoboshipsMoveShipComponentAction = { actionType: 'move-ship-component', shipID: selectedShipID, componentID: selectedComponentID, position: position }
+        const action: IRoboshipsPositionAction = { actionType: 'move-ship-component', shipID: selectedShipID, targetID: selectedComponentID, position: position }
         dispatch(action)
         setComponentMoved(true)
     }
@@ -121,7 +121,7 @@ export default function LayoutEditorSVG({ selectedShipID, componentTypeToAdd }: 
             switch(menuCommand)
             {
                 case 'delete':
-                    const action: IRoboshipsDeleteShipComponentAction = { actionType: 'delete-ship-component', shipID: selectedShipID, componentID: menuTargetComponentId }
+                    const action: IRoboshipsNumberAction = { actionType: 'delete-ship-component', shipID: selectedShipID, value: menuTargetComponentId }
                     dispatch(action)
                     setComponentMoved(true)
                     break;

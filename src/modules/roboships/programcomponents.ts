@@ -65,15 +65,15 @@ export interface IParameterDefinition
 }
 
 export const commandDefs: ICommmandDefinition[] = [  
-  { commandType: "command", command: "Start", targetType: "general", displayTarget:false,  numParameters: 0, numConnections: 1 },  
-  { commandType: "command", command: "SetSpeed", targetType: "ship", displayTarget:true, numParameters: 1, numConnections: 1 },
-  { commandType: "command", command: "SetHeading", targetType: "ship", displayTarget:true, numParameters: 1, numConnections: 1 },
-  { commandType: "command", command: "SetHeading", targetType: "gun", displayTarget:true, numParameters: 1, numConnections: 1 },
-  { commandType: "command", command: "IsTurning", targetType: "gun", displayTarget:true, numParameters: 0, numConnections: 2 },
-  { commandType: "command", command: "IsLoading", targetType: "gun", displayTarget:true, numParameters: 0, numConnections: 2 },
-  { commandType: "command", command: "Fire", targetType: "gun", displayTarget:true, numParameters: 0, numConnections: 1 },
-  { commandType: "command", command: "SetHeading", targetType: "radar", displayTarget:true, numParameters: 1, numConnections: 1 },
-  { commandType: "command", command: "IsDetected", targetType: "radar", displayTarget:true, numParameters: 0, numConnections: 2 }
+  { commandType: "command", command: "Start", targetType: "General", displayTarget:false,  numParameters: 0, numConnections: 1 },  
+  { commandType: "command", command: "SetSpeed", targetType: "Ship", displayTarget:true, numParameters: 1, numConnections: 1 },
+  { commandType: "command", command: "SetHeading", targetType: "Ship", displayTarget:true, numParameters: 1, numConnections: 1 },
+  { commandType: "command", command: "SetHeading", targetType: "Gun", displayTarget:true, numParameters: 1, numConnections: 1 },
+  { commandType: "command", command: "IsTurning", targetType: "Gun", displayTarget:true, numParameters: 0, numConnections: 2 },
+  { commandType: "command", command: "IsLoading", targetType: "Gun", displayTarget:true, numParameters: 0, numConnections: 2 },
+  { commandType: "command", command: "Fire", targetType: "Gun", displayTarget:true, numParameters: 0, numConnections: 1 },
+  { commandType: "command", command: "SetHeading", targetType: "Radar", displayTarget:true, numParameters: 1, numConnections: 1 },
+  { commandType: "command", command: "IsDetected", targetType: "Radar", displayTarget:true, numParameters: 0, numConnections: 2 }
   
 ]
 

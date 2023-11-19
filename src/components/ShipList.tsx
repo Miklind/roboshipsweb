@@ -1,6 +1,6 @@
 "use client"
 
-import { IRoboshipsState, IRoboshipsStateAction } from "@/modules/shipstatecontext"
+import { IRoboshipsState, IRoboshipsAction } from "@/modules/shipstatecontext"
 import { useContext, useState, useEffect } from "react"
 import ShipStateContext from "@/modules/shipstatecontext"
 import ShipListItem from "./ShipListItem"
@@ -29,7 +29,7 @@ export default function ShipList( { selectedShipID, onShipSeleced, onLoadShip,on
     }, [shipAdded])
 
     function addShip() {
-        const action: IRoboshipsStateAction = { actionType: 'add-ship' } 
+        const action: IRoboshipsAction = { actionType: 'add-ship' } 
         dispatch(action)
         setshipAdded(true)
     }

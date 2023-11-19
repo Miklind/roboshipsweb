@@ -1,11 +1,10 @@
 import React, { useRef, useState, useContext, useEffect, useMemo } from 'react';
 import { IShip } from '@/modules/roboships/ship';
-import ShipStateContext,  { IRoboshipsMoveShipCommandAction, 
+import ShipStateContext,  { IRoboshipsPositionAction, 
                             IProgramComponentToAdd, 
                             IRoboshipsAddProgramComponentAction, 
                             IRoboshipsConnectShipCommandAction,
-                            IRoboshipsDeleteShipCommandAction,
-                            IRoboshipsDisconnectShipCommandAction}  from '@/modules/shipstatecontext';
+                            IRoboshipsNumberAction}  from '@/modules/shipstatecontext';
 import SVGGrid from './SVGGrid';
 import { useDebouncedCallback } from 'use-debounce';
 import SVGProgram from './SVGProgram';
@@ -110,7 +109,7 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
             let position = ScaleAndSnap(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
 
             if(selecteItemType === 'command') {
-                const action: IRoboshipsMoveShipCommandAction = { actionType: 'move-program-command', shipID: selectedShipID, commandID: selectedItemID, position: position }
+                const action: IRoboshipsPositionAction = { actionType: 'move-program-command', shipID: selectedShipID, targetID: selectedItemID, position: position }
                 dispatch(action)
             }
         }
@@ -212,11 +211,11 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
             switch(menuCommand)
             {
                 case 'delete':
-                    const action: IRoboshipsDeleteShipCommandAction = { actionType: 'delete-program-command', shipID: selectedShipID, commandID: menuTargetCommandId }
+                    const action: IRoboshipsNumberAction = { actionType: 'delete-program-command', shipID: selectedShipID, value: menuTargetCommandId }
                     dispatch(action)
                     break;
                 case 'disconnect':
-                    const action2: IRoboshipsDisconnectShipCommandAction = { actionType: 'disconnect-program-command', shipID: selectedShipID, commandID: menuTargetCommandId }
+                    const action2: IRoboshipsNumberAction = { actionType: 'disconnect-program-command', shipID: selectedShipID, value: menuTargetCommandId }
                     dispatch(action2)
                     break;
                 default:

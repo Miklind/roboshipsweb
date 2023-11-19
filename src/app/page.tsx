@@ -3,7 +3,7 @@
 import React, { useReducer, useState, useEffect } from 'react'
 import ShipList from '@/components/ShipList'
 import ShipEditor from '@/components/ShipEditor'
-import {shipStateReducer, IRoboshipsAddShipFromDataAction, IRoboshipsSetShipNameAction } from '@/modules/shipstatecontext'
+import {shipStateReducer, IRoboshipsAddShipFromDataAction, IRoboshipsStringAction } from '@/modules/shipstatecontext'
 import ShipStateContext from '@/modules/shipstatecontext'
 import FileList from '@/components/FileList'
 import { IShip } from '@/modules/roboships/ship'
@@ -64,7 +64,8 @@ export default function Home() {
     {
       fetch(`/api/files/${fileName}`)
       .then(response => response.json())
-      .then(data =>setLoadedShip(data));
+      .then(data =>setLoadedShip(data))
+      
     }
     else if(fileMode === 'save')
     {
@@ -82,7 +83,7 @@ export default function Home() {
 
         let shipName = path.basename(fileName, '.json')
 
-        const action: IRoboshipsSetShipNameAction = { actionType: 'set-ship-name', shipID: selectedShipId, name: shipName }
+        const action: IRoboshipsStringAction = { actionType: 'set-ship-name', shipID: selectedShipId, value: shipName }
         dispatch(action)
         
       }      
