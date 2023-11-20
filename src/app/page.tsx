@@ -34,6 +34,7 @@ export default function Home() {
     {
       setShipLoaded(false)
       setselectedShipId(state.ships[state.ships.length - 1].id)
+      resetIdSequences(state.ships[state.ships.length - 1].id)
     }
 
 
