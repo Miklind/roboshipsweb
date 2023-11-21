@@ -1,7 +1,6 @@
 import { IShipComponent, createShipComponent } from "./shipcomponent";
 import { IPoint } from "./shapeutils";
 
-
 export default class ShipComponentFactory
 {
     static createShipComponent(componentType: string) : IShipComponent
@@ -72,7 +71,6 @@ export default class ShipComponentFactory
 
         return points
     }
-
 }
 
 class ShipComponentBuilder {

@@ -11,7 +11,6 @@ interface IShipStateContext {
 
 const ShipStateContext = createContext<IShipStateContext>({} as IShipStateContext)
 
-
 export interface IRoboshipsState {
   ships: IShip[]
 }
@@ -68,13 +67,6 @@ export interface IRoboshipsNumberAction extends IRoboshipsAction {
   shipID: number
   value: number
 }
-
-
-
-
-
-
-
 
 function GetCompomentSortValue(componentType: string): number {
   switch (componentType) {
@@ -233,9 +225,7 @@ function performDeleteProgramCommand(state: IRoboshipsState, action: IRoboshipsA
     }
   })
 
-
   return { ...state, ships: modifiedShips }
-
 }
 
 function performConnectProgramCommand(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
@@ -304,7 +294,6 @@ function performAddShip(state: IRoboshipsState, action: IRoboshipsAction): IRobo
     startCommand.position = { x: 20, y: 20 }
     newShip.program.push(startCommand)
 
-
     return { ...state, ships: [...state.ships, newShip] }
   }
 
@@ -317,12 +306,10 @@ function performAddShipFromData(state: IRoboshipsState, action: IRoboshipsAction
 
     let newShip = { ...addShipFromDataAction.shipToAdd, id: getNewShipId() }
 
-
     return { ...state, ships: [...state.ships, newShip] }
   }
 
   return state;
-
 }
 
 function performSetShipName(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
@@ -408,8 +395,6 @@ function performMoveShipComponent(state: IRoboshipsState, action: IRoboshipsActi
 }
 
 function performAddProgramComponent(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
-
-
   let addProgramComponentAction = action as IRoboshipsAddProgramComponentAction;
 
   let modifiedShips = state.ships.map((ship) => {

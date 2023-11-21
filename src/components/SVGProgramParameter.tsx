@@ -7,8 +7,6 @@ interface ISVGProgramParameterProps {
     scrollPos: {x: number, y: number}
     command: IProgramCommand
     parameter: IProgramParameter
-
-   
 }
 
 export default function SVGProgramParameter({ scale, command,  parameter, scrollPos } : ISVGProgramParameterProps ) {
@@ -26,7 +24,6 @@ export default function SVGProgramParameter({ scale, command,  parameter, scroll
     const y= -scrollPos.y + command.position.y - commandHeight / 2 + commmandTitleHeight
 
     return (<>
-
                 <rect 
                 x={scaledToSVG(x + 0.4)} 
                 y={scaledToSVG(y + 0.4)} 
@@ -48,8 +45,5 @@ export default function SVGProgramParameter({ scale, command,  parameter, scroll
                 >
                     {parameter.displayTarget ? `${parameter.targetType}.${parameter.parameter}` : parameter.parameter}
             </text>
-    
-    
-    
     </>);
 }

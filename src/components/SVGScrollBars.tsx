@@ -5,7 +5,6 @@ interface IRenderGripProps {
     maxWidth: number
     scale: number
     scrollPos: { x: number, y: number }
-
 }
 
 export default function SVGScrollBars({ height, width, maxWidth, maxHeight, scale, scrollPos }: IRenderGripProps) {
@@ -73,9 +72,6 @@ export default function SVGScrollBars({ height, width, maxWidth, maxHeight, scal
             strokeWidth="6"
         />
     );
-
-
-
 
     return (<>{bars}</>);
 }

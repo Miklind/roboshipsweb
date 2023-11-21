@@ -7,7 +7,6 @@ interface ISVGProgramCommandProps {
     scrollPos: {x: number, y: number}
     itemSelected: (itemType: string, itemID: number) => void 
     openContextMenu: (commandID: number) => void
-
 }
 
 export interface ISelectedConnection 
@@ -110,12 +109,6 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 })
             
             }
-
-            
-
-
-            
-
         </>
     );
 }

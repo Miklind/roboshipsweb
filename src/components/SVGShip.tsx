@@ -17,7 +17,6 @@ export default function SVGShip({ scale, validComponents, ship, componentSelecte
     }
 
     return (<>
-
         {ship.shipComponents.map((component, index) => {
             const polygonData = getPolygonData(component, scale);        
             return <SVGShipComponent key={component.id} 
@@ -28,6 +27,5 @@ export default function SVGShip({ scale, validComponents, ship, componentSelecte
                                      openContextMenu={ (componentId) => { openContextMenu(componentId)}}
                                      />
         })}
-
     </>)
 }

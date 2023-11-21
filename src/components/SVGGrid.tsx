@@ -1,15 +1,12 @@
-interface IRenderGripProps 
+interface IRenderGridProps 
 { 
     height: number
     width: number
     scale: number
     scrollPos: {x: number, y: number}
-    
 }
 
-
-
-export default function SVGGrid({ height, width, scale, scrollPos} : IRenderGripProps ) {
+export default function SVGGrid({ height, width, scale, scrollPos} : IRenderGridProps ) {
 
     function scaledToSVG(n: number): number {
         return n * scale;

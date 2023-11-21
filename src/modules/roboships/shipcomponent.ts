@@ -2,8 +2,6 @@ import { IShip } from "./ship";
 import { isPointInsidePolygon } from "./shapeutils";
 import { IPoint } from "./shapeutils";
 
-
-
 let nextShipComponentId = 0
 
 export function setNextShipComponentId(id: number)
