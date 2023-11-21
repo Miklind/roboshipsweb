@@ -1,4 +1,4 @@
-This is React skill demostration app by Mikko Lindfors
+This is React skill demostration app by Mikko Lindfors. It is partial recration of my old programming [https://roboships.sourceforge.net](game) .
 
 Made with: next.js, tailwind.css and DaisyUI
 
