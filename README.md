@@ -1,4 +1,4 @@
-This is React skill demostration app by Mikko Lindfors. It is partial recration of my old programming [https://roboships.sourceforge.net](game) .
+This is React skill demostration app by Mikko Lindfors. It is partial remake of my old programming [game](https://roboships.sourceforge.net) .
 
 Made with: next.js, tailwind.css and DaisyUI
 
@@ -9,16 +9,10 @@ Install required modules
 npm install
 ```
 
-First, run the development server:
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
