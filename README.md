@@ -1,6 +1,13 @@
 This is React skill demostration app by Mikko Lindfors
 
+Made with: next.js, tailwind.css and DaisyUI
+
 ## Getting Started
+
+Install required modules
+```bash
+npm install
+```
 
 First, run the development server:
 
