@@ -39,7 +39,7 @@ export default function ProgramPalette({ onComponentDrag }: IProgramPaletteProps
 
     return (
         <div className='bg-base-200 w-48 m-1 rounded flex flex-col'>
-            <ul className='flex-grow m-1 rounded p-1 list-none'>
+            <ul className='flex-grow m-1 rounded p-1 list-none basis-0 overflow-auto'>
 
                 {paletteItems.map((item) => (
                     <li key={item[0]}>
@@ -47,13 +47,13 @@ export default function ProgramPalette({ onComponentDrag }: IProgramPaletteProps
                         <ul className='flex-grow m-1 rounded p-1 list-none'>
 
                             {item[1].map((command) => (
-                                <li key={`${item[0]}${command.command}`} className='bg-gray-300 rounded m-1 p-3 cursor-pointer' draggable onDragStart={(e) => onDragStartList(e, "command", command.command, item[0])}>
+                                <li key={`${item[0]}${command.command}`} className='bg-gray-300 rounded m-1 p-1 cursor-pointer' draggable onDragStart={(e) => onDragStartList(e, "command", command.command, item[0])}>
                                     {command.command}
                                 </li>
                             ))}
 
                             {item[2].map((parameter) => (
-                                <li key={`${item[0]}${parameter.parameter}`} className='bg-gray-400 rounded m-1 p-3 cursor-pointer' draggable onDragStart={(e) => onDragStartList(e, "parameter", parameter.parameter, item[0])}>
+                                <li key={`${item[0]}${parameter.parameter}`} className='bg-gray-400 rounded m-1 p-1 cursor-pointer' draggable onDragStart={(e) => onDragStartList(e, "parameter", parameter.parameter, item[0])}>
                                     {parameter.parameter}
                                 </li>
                             ))}

@@ -173,23 +173,18 @@ function performDisconnectProgramCommand(state: IRoboshipsState, action: IRobosh
             else {
               return connection
             }
-
           })
           return { ...command, connectedTo: modifiedConnections }
         }
         else {
           return command
         }
-
       })
-
       return { ...ship, program: modifiedCommands }
     }
     else {
       return ship
     }
-
-
   })
 
   return { ...state, ships: modifiedShips }
@@ -215,6 +210,30 @@ function performDeleteProgramCommand(state: IRoboshipsState, action: IRoboshipsA
       return ship
     }
   });
+
+  // Remove connection to deleted command
+  
+  modifiedShips = modifiedShips.map((ship) => {
+    if (ship.id === deleteShipCommandAction.shipID) {
+      let modifiedCommands = ship.program.map((command) => {
+        let modifiedConnections = command.connectedTo.map((connection) => {
+          if (connection === deleteShipCommandAction.value) {
+            return -1
+          }
+          else {
+            return connection
+          }
+        })
+        return { ...command, connectedTo: modifiedConnections }
+      })
+      return { ...ship, program: modifiedCommands }
+    }
+    else {
+      return ship
+    }
+  })
+
+
   return { ...state, ships: modifiedShips }
 
 }
@@ -281,7 +300,7 @@ function performAddShip(state: IRoboshipsState, action: IRoboshipsAction): IRobo
     hull.position = { x: 35, y: 50 }
     newShip.shipComponents.push(hull);
 
-    let startCommand = ProgramCommandFactory.createProgramCommand("Start", "general", -1)
+    let startCommand = ProgramCommandFactory.createProgramCommand("Start", "General", -1)
     startCommand.position = { x: 20, y: 20 }
     newShip.program.push(startCommand)
 

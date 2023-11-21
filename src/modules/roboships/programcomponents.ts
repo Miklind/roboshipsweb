@@ -69,11 +69,11 @@ export const commandDefs: ICommmandDefinition[] = [
   { commandType: "command", command: "SetSpeed", targetType: "Ship", displayTarget:true, numParameters: 1, numConnections: 1 },
   { commandType: "command", command: "SetHeading", targetType: "Ship", displayTarget:true, numParameters: 1, numConnections: 1 },
   { commandType: "command", command: "SetHeading", targetType: "Gun", displayTarget:true, numParameters: 1, numConnections: 1 },
-  { commandType: "command", command: "IsTurning", targetType: "Gun", displayTarget:true, numParameters: 0, numConnections: 2 },
-  { commandType: "command", command: "IsLoading", targetType: "Gun", displayTarget:true, numParameters: 0, numConnections: 2 },
+  { commandType: "condition", command: "IsTurning", targetType: "Gun", displayTarget:true, numParameters: 0, numConnections: 2 },
+  { commandType: "condition", command: "IsLoading", targetType: "Gun", displayTarget:true, numParameters: 0, numConnections: 2 },
   { commandType: "command", command: "Fire", targetType: "Gun", displayTarget:true, numParameters: 0, numConnections: 1 },
   { commandType: "command", command: "SetHeading", targetType: "Radar", displayTarget:true, numParameters: 1, numConnections: 1 },
-  { commandType: "command", command: "IsDetected", targetType: "Radar", displayTarget:true, numParameters: 0, numConnections: 2 }
+  { commandType: "condition", command: "IsDetected", targetType: "Radar", displayTarget:true, numParameters: 0, numConnections: 2 }
   
 ]
 

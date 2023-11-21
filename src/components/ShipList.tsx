@@ -43,7 +43,7 @@ export default function ShipList( { selectedShipID, onShipSeleced, onLoadShip,on
             <button className='btn btn-neutral btn-xs' onClick={ () => onLoadShip() }>Load</button>
             <button className='btn btn-neutral btn-xs' onClick={ () => onSaveShip() }>Save</button>
         </div>
-        <ul className='flex-grow m-1 border-black border-2 rounded p-1 list-none'>
+        <ul className='flex-grow m-1 border-black border-2 rounded p-1 list-none basis-0 overflow-auto'>
             { state.ships.map((ship) => {
                 return <ShipListItem key={ship.id} shipID={ship.id} name={ship.name} selected={ ship.id === selectedShipID } onClick={  () => onShipSeleced(ship.id) } />
             }) }

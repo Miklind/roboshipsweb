@@ -28,19 +28,19 @@ export default function SVGProgramParameter({ scale, command,  parameter, scroll
     return (<>
 
                 <rect 
-                x={scaledToSVG(x + 0.3)} 
-                y={scaledToSVG(y + 0.3)} 
-                width={scaledToSVG(width-0.6)} 
-                height={scaledToSVG(height-0.6)} 
+                x={scaledToSVG(x + 0.4)} 
+                y={scaledToSVG(y + 0.4)} 
+                width={scaledToSVG(width-0.8)} 
+                height={scaledToSVG(height-0.8)} 
                 rx={scaledToSVG(1)}  
                 stroke="black" 
-                fill="yellow"                 
+                fill="lightgray"                 
                 />   
 
                 <text className='select-none' 
                 x={scaledToSVG(x + width/2)} 
                 y={scaledToSVG(y + height/2)} 
-                style={{ fontSize: `${scaledToSVG(2)}px` }} 
+                style={{ fontSize: `${scaledToSVG(1.8)}px` }} 
                 fill="black" 
                 textAnchor="middle" 
                 dominantBaseline="middle"

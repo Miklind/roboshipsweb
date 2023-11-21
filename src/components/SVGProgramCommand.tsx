@@ -42,7 +42,7 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
 
     return (
         <>                                
-            <rect 
+            {command.commandType==="command" && <rect 
                 x={scaledToSVG(-scrollPos.x + command.position.x - commandWidth / 2)} 
                 y={scaledToSVG(-scrollPos.y + command.position.y - commandHeight / 2)} 
                 width={scaledToSVG(commandWidth)} 
@@ -52,7 +52,20 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 fill="white" 
                 onMouseDown={(e) => { if(e.button==0) itemSelected('command', command.id) }}
                 onContextMenu={(e) => onCommandContextMenuRect(e, command.id)}
-            />           
+            />}
+
+            {command.commandType==="condition" && <polygon 
+                points={`${scaledToSVG(-scrollPos.x + command.position.x - commandWidth / 2)},${scaledToSVG(-scrollPos.y + command.position.y - commandHeight / 2 + commmandTitleHeight)}
+                        ${scaledToSVG(-scrollPos.x + command.position.x - commandWidth / 2 - 2)},${scaledToSVG(-scrollPos.y + command.position.y + commmandTitleHeight / 2)}
+                         ${scaledToSVG(-scrollPos.x + command.position.x - commandWidth / 2)},${scaledToSVG(-scrollPos.y + command.position.y + commandHeight / 2)} 
+                         ${scaledToSVG(-scrollPos.x + command.position.x + commandWidth / 2)},${scaledToSVG(-scrollPos.y + command.position.y + commandHeight / 2)} 
+                         ${scaledToSVG(-scrollPos.x + command.position.x + commandWidth / 2 + 2)},${scaledToSVG(-scrollPos.y + command.position.y + commmandTitleHeight / 2  )} 
+                         ${scaledToSVG(-scrollPos.x + command.position.x + commandWidth / 2)},${scaledToSVG(-scrollPos.y + command.position.y - commandHeight / 2 + commmandTitleHeight)}                                                                                     
+                        `} 
+                stroke="black" 
+                fill="white" 
+          
+                />}
             
             <rect 
                 x={scaledToSVG(-scrollPos.x + command.position.x - commandWidth / 2)} 
