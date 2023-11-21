@@ -27,24 +27,12 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
         return n * scale;
     }
 
-    function onCommandContextMenuRect(e: React.MouseEvent<SVGRectElement, MouseEvent>, commandID: number) {
+    function onCommandContextMenu(e: React.MouseEvent<SVGRectElement, MouseEvent>|React.MouseEvent<SVGTextElement, MouseEvent>|React.MouseEvent<SVGPolygonElement, MouseEvent>, commandID: number) {
         e.preventDefault();
         e.stopPropagation();        
         openContextMenu(commandID)
     }
-
-    function onCommandContextMenuText(e: React.MouseEvent<SVGTextElement, MouseEvent>, commandID: number) {
-        e.preventDefault();
-        e.stopPropagation();            
-        openContextMenu(commandID)
-    }
-
-    function onCommandContextMenuPoly(e: React.MouseEvent<SVGPolygonElement, MouseEvent>, commandID: number) {
-        e.preventDefault();
-        e.stopPropagation();            
-        openContextMenu(commandID)
-    }
-
+    
     return (
         <>                                
             {command.commandType==="command" && <rect 
@@ -56,7 +44,7 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 stroke="black" 
                 fill="white" 
                 onMouseDown={(e) => { if(e.button==0) itemSelected('command', command.id) }}
-                onContextMenu={(e) => onCommandContextMenuRect(e, command.id)}
+                onContextMenu={(e) => onCommandContextMenu(e, command.id)}
             />}
 
             {command.commandType==="condition" && <polygon 
@@ -70,7 +58,7 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 stroke="black" 
                 fill="white" 
                 onMouseDown={(e) => { if(e.button==0) itemSelected('command', command.id) }}
-                onContextMenu={(e) => onCommandContextMenuPoly(e, command.id)}
+                onContextMenu={(e) => onCommandContextMenu(e, command.id)}
           
                 />}
             
@@ -82,7 +70,7 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 stroke="black" 
                 fill="lightblue" 
                 onMouseDown={(e) => { if(e.button==0) itemSelected('command',command.id) }}
-                onContextMenu={(e) => onCommandContextMenuRect(e, command.id)}
+                onContextMenu={(e) => onCommandContextMenu(e, command.id)}
             />           
             
             <text className='select-none' 
@@ -93,7 +81,7 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 textAnchor="middle" 
                 dominantBaseline="middle"
                 onMouseDown={(e) => { if(e.button==0) itemSelected('command', command.id) }}
-                onContextMenu={(e) => onCommandContextMenuText(e, command.id)}
+                onContextMenu={(e) => onCommandContextMenu(e, command.id)}
                 >
                     {command.displayTarget ? `${command.targetType}.${command.command}` : command.command }
             </text>

@@ -4,15 +4,17 @@ import ShipStateContext,  { IRoboshipsPositionAction,
                             IProgramComponentToAdd, 
                             IRoboshipsAddProgramComponentAction, 
                             IRoboshipsConnectShipCommandAction,
-                            IRoboshipsNumberAction}  from '@/modules/shipstatecontext';
+                            IRoboshipsNumberAction,
+                            IRoboshipsSetParameterAction}  from '@/modules/shipstatecontext';
 import SVGGrid from './SVGGrid';
 import { useDebouncedCallback } from 'use-debounce';
 import SVGProgram from './SVGProgram';
-import { commandHeight, commandWidth } from './SVGProgramCommand';
+import { commandHeight, commandWidth, commmandTitleHeight } from './SVGProgramCommand';
 import { ISelectedConnection } from './SVGProgramCommand';
 import { isPointInsideRect } from '@/modules/roboships/shapeutils';
 import SVGScrollBars from './SVGScrollBars';
 import ProgramCommandMenu from './ProgramCommandMenu';
+import { IProgramCommand, IProgramParameter } from '@/modules/roboships/programcomponents';
 
 interface ILayoutSVGProps {
     selectedShipID: number
@@ -67,10 +69,52 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
         }
     }
 
+    function mouseOverCommand(x: number, y: number, exceptCommandId?: number) : IProgramCommand | null
+    {
+        if(exceptCommandId === undefined) exceptCommandId = -1
+
+        if(ship !== null)
+        {
+            for(let command of ship.program)
+            {
+                if(command.id !== exceptCommandId && isPointInsideRect({x: x, y: y}, {x: command.position.x, y: command.position.y}, commandWidth, commandHeight))
+                {
+                    return command
+                    break;                      
+                }
+            }
+        }
+
+        return null
+    }
+
+    function mouseOverCommandOrParameter(x: number, y: number, exceptCommandId?: number) : { command: IProgramCommand|null, param: IProgramParameter|null}
+    {
+        if(exceptCommandId === undefined) exceptCommandId = -1
+        let resultCommand=mouseOverCommand(x, y, exceptCommandId)
+        if(resultCommand === null) return {command: null, param: null}
+               
+        for(let paramIdx=0; paramIdx<resultCommand.parameters.length; paramIdx++)
+        {          
+            const paramWidth: number = resultCommand.parameters.length > 1 ? commandWidth / resultCommand.parameters.length : commandWidth
+            const paramHeight: number = commandHeight - commmandTitleHeight
+            const paramXCenter=  resultCommand.position.x - commandWidth / 2 + paramIdx * paramWidth + paramWidth / 2
+            const paramYCenter=  resultCommand.position.y - commandHeight / 2 + commmandTitleHeight + paramHeight / 2
+           
+            if(isPointInsideRect({x: x, y: y}, {x: paramXCenter, y: paramYCenter}, paramWidth, paramHeight))
+            {
+                return {command: resultCommand, param: resultCommand.parameters[paramIdx]}                
+            }
+        }
+            
+        return {command: resultCommand, param: null}
+        
+    }
+
     function mouseMoveSVG(e: React.MouseEvent<SVGSVGElement, MouseEvent>) {
        if(svgIsMouseDown && (selectedItemID === -1  || selecteItemType === '') && selectedConnection === null) 
        {
-            // Pan
+            // Nothing selected - Pan view
 
             let newX = svgScrollPos.x - e.movementX / svgScale
             let newY = svgScrollPos.y - e.movementY / svgScale
@@ -79,41 +123,28 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
             newX = Math.max(0, Math.min(newX, scrollSizeX-svgSize.width / svgScale));
             newY = Math.max(0, Math.min(newY, scrollSizeY-svgSize.height / svgScale ));
 
-            setSVGScrollPos({x: newX, y: newY})
-
-       
+            setSVGScrollPos({x: newX, y: newY})       
        }       
        else if(selectedConnection !== null)
        {
+            // Moving connection
+
             let position = ScaleAndSnap(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
-
-            let overCommand = false
-
-            if(ship !== null)
-            {
-
-                for(let command of ship.program)
-                {
-                    if(command.id !== selectedConnection.commandID && isPointInsideRect({x: position.x, y: position.y}, {x: command.position.x, y: command.position.y}, commandWidth, commandHeight))
-                    {
-                        overCommand = true
-                        break;
-                    }
-                }
-            }
-
+            let overCommand = mouseOverCommand(position.x, position.y, selectedConnection.commandID) !== null
+           
             setSelectedConnection({...selectedConnection, position: position, highlighted: overCommand})
        }
        else if(selectedItemID !== -1  && selecteItemType !== '')
        {            
+            // Moving command
+
             let position = ScaleAndSnap(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
 
             if(selecteItemType === 'command') {
                 const action: IRoboshipsPositionAction = { actionType: 'move-program-command', shipID: selectedShipID, targetID: selectedItemID, position: position }
                 dispatch(action)
             }
-        }
-        
+        }        
     }
 
     // Disable dragging from svg image 
@@ -131,13 +162,27 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
   
         let position = ScaleAndSnap(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
                 
-        const action: IRoboshipsAddProgramComponentAction = { actionType: 'add-program-component', shipID: selectedShipID, component: programComponentToAdd, position: position }
-        dispatch(action)        
+        if(programComponentToAdd.programComponentType==='command' || programComponentToAdd.programComponentType==='condition')
+        {
+            const action: IRoboshipsAddProgramComponentAction = { actionType: 'add-program-command', shipID: selectedShipID, component: programComponentToAdd, position: position }
+            dispatch(action)        
+        }
+        else if(programComponentToAdd.programComponentType==='parameter')
+        {
+            let commandAndParam=mouseOverCommandOrParameter(position.x, position.y)
+
+            if(commandAndParam.command !== null && commandAndParam.param !== null)
+            {
+                const action: IRoboshipsSetParameterAction = { actionType: 'set-program-parameter', shipID: selectedShipID, component: programComponentToAdd, setInCommand: commandAndParam.command, replaceParam: commandAndParam.param }
+                dispatch(action)        
+            
+            }
+        }
+            
     }
 
     function onWheelSVG(e: React.WheelEvent<SVGSVGElement>) {
        
-
         let newScale = svgScale + (e.deltaY / 100)
         // clamp scale
         newScale = Math.max(3, Math.min(newScale, 10));
@@ -150,9 +195,7 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
         newX = Math.max(0, Math.min(newX, scrollSizeX-svgSize.width / newScale))
         newY = Math.max(0, Math.min(newY, scrollSizeY-svgSize.height / newScale ))
 
-        setSVGScrollPos({x: newX, y: newY})
-
-        
+        setSVGScrollPos({x: newX, y: newY})        
     }
 
     function onMouseDownSVG(e: React.MouseEvent<SVGSVGElement, MouseEvent>) 
@@ -166,18 +209,15 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
         
         if(selectedConnection !== null)
         {
-            if(ship !== null)
-            {
+            // Connection moved - connect if over command
 
-                for(let command of ship.program)
-                {
-                    if(command.id !== selectedConnection.commandID && isPointInsideRect({x: selectedConnection.position.x, y: selectedConnection.position.y}, {x: command.position.x, y: command.position.y}, commandWidth, commandHeight))
-                    {
-                        const action: IRoboshipsConnectShipCommandAction = { actionType: 'connect-program-command', shipID: selectedShipID, commandID: selectedConnection.commandID, connectionIdx: selectedConnection.connectionIdx, connectToCommandID: command.id }
-                        dispatch(action)
-                        break;                      
-                    }
-                }
+            let overCommand = mouseOverCommand(selectedConnection.position.x, selectedConnection.position.y, selectedConnection.commandID)
+
+            if(overCommand !== null)
+            {                
+                const action: IRoboshipsConnectShipCommandAction = { actionType: 'connect-program-command', shipID: selectedShipID, commandID: selectedConnection.commandID, connectionIdx: selectedConnection.connectionIdx, connectToCommandID: overCommand.id }
+                dispatch(action)
+                                        
             }
         }
 
@@ -201,9 +241,7 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
     }    
 
     function onExecuteMenuCommand(menuTargetCommandId: number, menuCommand: string ) 
-    {
-      
-
+    {      
         const command= ship?.program.find((command) => command.id === menuTargetCommandId)
 
         if(command !== undefined) 
@@ -222,7 +260,6 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
             }
         }
             
-
         setShowProgramCommandMenu(false)
     }
 
@@ -265,7 +302,6 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
                                                            onExecuteMenuCommand={ (target,command) => onExecuteMenuCommand(target, command)} 
                                                            position={menuPosition} 
                                                            closeMenu={() => setShowProgramCommandMenu(false)} />}
-        </div>
-      
+        </div>      
     )
 }
