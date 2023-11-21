@@ -39,7 +39,7 @@ export default function ProgramPalette({ onComponentDrag }: IProgramPaletteProps
 
     return (
         <div className='bg-base-200 w-48 m-1 rounded flex flex-col'>
-            <div className="text-center text-sm bg-base-300">Drag commands to design view. Use right mouse button to delete/disconnect.</div>
+          
             <ul className='flex-grow m-1 rounded p-1 list-none basis-0 overflow-auto'>
 
                 {paletteItems.map((item) => (
@@ -62,6 +62,7 @@ export default function ProgramPalette({ onComponentDrag }: IProgramPaletteProps
                     </li>
                 ))}
             </ul>
+            <div className="text-center text-sm bg-base-300">Drag commands to design view. Left button: move/pan, Wheel: zoom, Right button: delete/disconnect.</div>
         </div>
     )
 }

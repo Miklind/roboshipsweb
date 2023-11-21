@@ -18,11 +18,11 @@ export default function ShipEditor( { selectedShipID }: IShipEditorProps) {
   const [activeTab, setActiveTab] = useState(2)  
   
   if (selectedShipID==-1) return (<div className='bg-base-200 flex flex-col flex-grow mr-1 my-1 rounded justify-center'>
-    <div className="flex justify-center items-center h-full">
+    <div className="flex justify-center items-center">
       <Image
         src="/Robot.png"
-        width={896}
-        height={512}
+        width={896/2}
+        height={512/2}
         alt="Roboships"
         priority
       />

@@ -11,7 +11,7 @@ export default function LayoutPalette( { onComponentDrag }: ILayoutPaletteProps)
 
     return (
         <div className='bg-base-200 w-48 m-1 rounded flex flex-col'>
-            <div className="text-center text-sm bg-base-300">Drag components to design view. Use right mouse button to delete.</div>
+          
             <ul className='flex-grow m-1 rounded p-1 list-none basis-0 overflow-auto'>
                 <li className='bg-gray-300 rounded m-1 p-1 cursor-pointer' draggable onDragStart={(e) => onDragStartList(e, "radar")}>
                     <p>Radar</p>
@@ -20,6 +20,7 @@ export default function LayoutPalette( { onComponentDrag }: ILayoutPaletteProps)
                     <p>Gun</p>
                 </li>
             </ul>
+            <div className="text-center text-sm bg-base-300">Drag components to design view. Right button: delete.</div>
         </div>
     )
 }
