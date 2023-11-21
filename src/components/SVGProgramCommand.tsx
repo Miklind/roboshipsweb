@@ -40,6 +40,12 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
         openContextMenu(commandID)
     }
 
+    function onCommandContextMenuPoly(e: React.MouseEvent<SVGPolygonElement, MouseEvent>, commandID: number) {
+        e.preventDefault();
+        e.stopPropagation();            
+        openContextMenu(commandID)
+    }
+
     return (
         <>                                
             {command.commandType==="command" && <rect 
@@ -64,6 +70,8 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                         `} 
                 stroke="black" 
                 fill="white" 
+                onMouseDown={(e) => { if(e.button==0) itemSelected('command', command.id) }}
+                onContextMenu={(e) => onCommandContextMenuPoly(e, command.id)}
           
                 />}
             
