@@ -16,7 +16,7 @@ export interface IShipComponent
     moveable : boolean
 
     position : IPoint
-    rotation : number
+    
     shape : IPoint[]
     strokeColor : string
     fillColor : string 
@@ -29,7 +29,20 @@ export function getPolygonData(component: IShipComponent, scale: number): { id: 
     return {
         id: component.id,
         points: pointsString,
-        transform: `rotate(${component.rotation} ${component.position.x*scale} ${component.position.y*scale} ) translate(${component.position.x*scale} ${component.position.y*scale})`,
+        transform: ` translate(${component.position.x*scale} ${component.position.y*scale})`,
+        fillColor: component.fillColor,
+        strokeColor: component.strokeColor,
+        strokeWidth: component.strokeWidth
+    };
+}
+
+export function getSimulationPolygonData(component: IShipComponent, simPos: IPoint, simRotation: number, scale: number): { id: number, points: string, transform: string, fillColor: string, strokeColor: string, strokeWidth: number } 
+{
+    const pointsString = component.shape.map(p => `${p.x * scale},${p.y * scale }`).join(' ');
+    return {
+        id: component.id,
+        points: pointsString,
+        transform: `rotate(${simRotation} ${simPos.x*scale} ${simPos.y*scale} ) translate(${simPos.x*scale} ${simPos.y*scale})`,
         fillColor: component.fillColor,
         strokeColor: component.strokeColor,
         strokeWidth: component.strokeWidth
@@ -38,7 +51,7 @@ export function getPolygonData(component: IShipComponent, scale: number): { id: 
 
 export function createShipComponent() : IShipComponent
 {
-    let shipComponent: IShipComponent = { id: nextShipComponentId++, componentType: "", moveable: true, position: {x: 0, y: 0}, rotation: 0, shape: [], strokeColor: 'black', fillColor: 'white', strokeWidth: 1}
+    let shipComponent: IShipComponent = { id: nextShipComponentId++, componentType: "", moveable: true, position: {x: 0, y: 0}, shape: [], strokeColor: 'black', fillColor: 'white', strokeWidth: 1}
     return shipComponent
 }
 

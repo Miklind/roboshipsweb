@@ -1,8 +1,8 @@
 import React, { useRef, useState, useContext, useEffect, useMemo } from 'react';
-import { IRoboshipsAddShipComponentAction, IRoboshipsPositionAction, IRoboshipsNumberAction } from '@/modules/shipstatecontext';
+import { IRoboshipsAddShipComponentAction, IRoboshipsPositionAction, IRoboshipsNumberAction } from '@/modules/shipEditorContext';
 import { IShip } from '@/modules/roboships/ship';
 import { IShipComponent, checkComponentPlacement } from '@/modules/roboships/shipcomponent';
-import ShipStateContext from '@/modules/shipstatecontext';
+import ShipEditorContext from '@/modules/shipEditorContext';
 import SVGGrid from './SVGGrid';
 import SVGShip from './SVGShip';
 import { useDebouncedCallback } from 'use-debounce';
@@ -16,7 +16,7 @@ interface ILayoutSVGProps {
 
 export default function LayoutEditorSVG({ selectedShipID, componentTypeToAdd }: ILayoutSVGProps) {
 
-    const { state, dispatch } = useContext(ShipStateContext)
+    const { state, dispatch } = useContext(ShipEditorContext)
 
     const svgDivRef = useRef<HTMLDivElement | null>(null);
     const [svgSize, setSvgSize] = useState({ height: 1, width: 1, scale: 1 })
@@ -151,7 +151,7 @@ export default function LayoutEditorSVG({ selectedShipID, componentTypeToAdd }: 
         <div className='bg-sky-300 max-h-full flex-grow  relative' ref={svgDivRef} >
             <svg className='bg-sky-300 absolute h-auto' viewBox={`0 0 ${svgSize.width} ${svgSize.height}`} onMouseMove={mouseMoveSVG} onMouseUp={(e) => {if(e.button===0) setSelectedComponentID(-1)} } onMouseLeave={() => setSelectedComponentID(-1)}
                 onDragStart={onDragStartSVG} onDragOver={onDragOverSVG} onDrop={onDragDropSVG} >
-                <SVGGrid height={svgSize.height} width={svgSize.width} scale={svgSize.scale} scrollPos={{ x:0, y:0} } />
+                <SVGGrid height={svgSize.height} width={svgSize.width} scale={svgSize.scale} scrollPos={{ x:0, y:0} } gridInterval={10} />
                 {ship !== null && <SVGShip scale={svgSize.scale} 
                                            validComponents={validComponents} 
                                            ship={ship} 

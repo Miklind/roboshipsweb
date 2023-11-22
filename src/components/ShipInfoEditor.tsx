@@ -1,8 +1,8 @@
 "use client"
 
-import { IRoboshipsStringAction } from "@/modules/shipstatecontext"
+import { IRoboshipsStringAction } from "@/modules/shipEditorContext"
 import { useContext } from "react"
-import ShipStateContext from "@/modules/shipstatecontext"
+import ShipEditorContext from "@/modules/shipEditorContext"
 import { IShip } from "@/modules/roboships/ship"
 
 
@@ -12,7 +12,7 @@ interface IShipInfoEditorProps {
 
 export default function ShipInfoEditor( { selectedShipID } : IShipInfoEditorProps ) {
 
-  const {state, dispatch} = useContext(ShipStateContext)     
+  const {state, dispatch} = useContext(ShipEditorContext)     
 
   
   function setShipName(event: React.ChangeEvent<HTMLInputElement>) {

@@ -6,16 +6,16 @@ import ProgramParameterFactory from './roboships/programparameterFactory'
 import { IPoint } from "./roboships/shapeutils"
 import { IProgramCommand, IProgramConstParameter, IProgramParameter } from './roboships/programcomponents'
 
-interface IShipStateContext {
-  state: IRoboshipsState;
+export interface IShipEditorState {
+  ships: IShip[]
+}
+
+interface IShipEditorContext {
+  state: IShipEditorState;
   dispatch: React.Dispatch<any>;
 }
 
-const ShipStateContext = createContext<IShipStateContext>({} as IShipStateContext)
-
-export interface IRoboshipsState {
-  ships: IShip[]
-}
+const ShipEditorContext = createContext<IShipEditorContext>({} as IShipEditorContext)
 
 export interface IProgramComponentToAdd {
   programComponentType: string
@@ -100,7 +100,7 @@ function GetCompomentSortValue(componentType: string): number {
   }
 }
 
-export function shipStateReducer(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+export function shipStateReducer(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   switch (action.actionType) {
     case "add-ship":
       return performAddShip(state, action);
@@ -152,7 +152,7 @@ export function shipStateReducer(state: IRoboshipsState, action: IRoboshipsActio
   }
 }
 
-function performSetConstParameter(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performSetConstParameter(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let setConstParameterAction = action as IRoboshipsSetConstParameterAction;
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === setConstParameterAction.shipID) {
@@ -184,7 +184,7 @@ function performSetConstParameter(state: IRoboshipsState, action: IRoboshipsActi
   return { ...state, ships: modifiedShips }
 }
 
-function performSetProgramParameter(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performSetProgramParameter(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let setProgramParameterAction = action as IRoboshipsSetParameterAction;
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === setProgramParameterAction.shipID) {
@@ -214,7 +214,7 @@ function performSetProgramParameter(state: IRoboshipsState, action: IRoboshipsAc
   return { ...state, ships: modifiedShips }
 }
 
-function performDeleteShipComponent(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performDeleteShipComponent(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let deleteShipComponentAction = action as IRoboshipsNumberAction;
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === deleteShipComponentAction.shipID) {
@@ -237,7 +237,7 @@ function performDeleteShipComponent(state: IRoboshipsState, action: IRoboshipsAc
   return { ...state, ships: modifiedShips }
 }
 
-function performDisconnectProgramCommand(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performDisconnectProgramCommand(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let disconnectShipCommandAction = action as IRoboshipsNumberAction;
   let modifiedShips = state.ships.map((ship) => {
 
@@ -269,7 +269,7 @@ function performDisconnectProgramCommand(state: IRoboshipsState, action: IRobosh
   return { ...state, ships: modifiedShips }
 }
 
-function performDeleteProgramCommand(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performDeleteProgramCommand(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let deleteShipCommandAction = action as IRoboshipsNumberAction;
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === deleteShipCommandAction.shipID) {
@@ -315,7 +315,7 @@ function performDeleteProgramCommand(state: IRoboshipsState, action: IRoboshipsA
   return { ...state, ships: modifiedShips }
 }
 
-function performConnectProgramCommand(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performConnectProgramCommand(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let connectShipCommandAction = action as IRoboshipsConnectShipCommandAction;
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === connectShipCommandAction.shipID) {
@@ -347,7 +347,7 @@ function performConnectProgramCommand(state: IRoboshipsState, action: IRoboships
 
 }
 
-function performMoveProgramCommand(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performMoveProgramCommand(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let moveShipCommandAction = action as IRoboshipsPositionAction;
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === moveShipCommandAction.shipID) {
@@ -370,7 +370,7 @@ function performMoveProgramCommand(state: IRoboshipsState, action: IRoboshipsAct
   return { ...state, ships: modifiedShips }
 }
 
-function performAddShip(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performAddShip(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   if (state.ships.length < 8) {
     let newShip = createShip()
     let hull = ShipComponentFactory.createHull()
@@ -387,7 +387,7 @@ function performAddShip(state: IRoboshipsState, action: IRoboshipsAction): IRobo
   return state;
 }
 
-function performAddShipFromData(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performAddShipFromData(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   if (state.ships.length < 8) {
     let addShipFromDataAction = action as IRoboshipsAddShipFromDataAction;
 
@@ -399,7 +399,7 @@ function performAddShipFromData(state: IRoboshipsState, action: IRoboshipsAction
   return state;
 }
 
-function performSetShipName(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performSetShipName(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let setShipNameAction = action as IRoboshipsStringAction;
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === setShipNameAction.shipID) {
@@ -412,7 +412,7 @@ function performSetShipName(state: IRoboshipsState, action: IRoboshipsAction): I
   return { ...state, ships: modifiedShips }
 }
 
-function performSetShipAuthor(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performSetShipAuthor(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let setShipAuthorAction = action as IRoboshipsStringAction;
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === setShipAuthorAction.shipID) {
@@ -425,7 +425,7 @@ function performSetShipAuthor(state: IRoboshipsState, action: IRoboshipsAction):
   return { ...state, ships: modifiedShips }
 }
 
-function performSetShipDescription(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performSetShipDescription(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
 
   let setShipDescriptionAction = action as IRoboshipsStringAction;
   let modifiedShips = state.ships.map((ship) => {
@@ -439,7 +439,7 @@ function performSetShipDescription(state: IRoboshipsState, action: IRoboshipsAct
   return { ...state, ships: modifiedShips }
 }
 
-function performAddShipComponent(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performAddShipComponent(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let addShipComponentAction = action as IRoboshipsAddShipComponentAction;
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === addShipComponentAction.shipID) {
@@ -458,7 +458,7 @@ function performAddShipComponent(state: IRoboshipsState, action: IRoboshipsActio
   return { ...state, ships: modifiedShips }
 }
 
-function performMoveShipComponent(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performMoveShipComponent(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let moveShipComponentAction = action as IRoboshipsPositionAction;
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === moveShipComponentAction.shipID) {
@@ -481,7 +481,7 @@ function performMoveShipComponent(state: IRoboshipsState, action: IRoboshipsActi
   return { ...state, ships: modifiedShips }
 }
 
-function performAddProgramCommand(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+function performAddProgramCommand(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let addProgramComponentAction = action as IRoboshipsAddProgramComponentAction;
 
   let modifiedShips = state.ships.map((ship) => {
@@ -503,4 +503,4 @@ function performAddProgramCommand(state: IRoboshipsState, action: IRoboshipsActi
 }
 
 
-export default ShipStateContext
+export default ShipEditorContext

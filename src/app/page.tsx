@@ -3,8 +3,8 @@
 import React, { useReducer, useState, useEffect } from 'react'
 import ShipList from '@/components/ShipList'
 import ShipEditor from '@/components/ShipEditor'
-import {shipStateReducer, IRoboshipsAddShipFromDataAction, IRoboshipsStringAction } from '@/modules/shipstatecontext'
-import ShipStateContext from '@/modules/shipstatecontext'
+import {shipStateReducer, IRoboshipsAddShipFromDataAction, IRoboshipsStringAction } from '@/modules/shipEditorContext'
+import ShipEditorContext from '@/modules/shipEditorContext'
 import FileList from '@/components/FileList'
 import { IShip } from '@/modules/roboships/ship'
 import { setNextProgramCommandId, setNextProgramParameterId } from '@/modules/roboships/programcomponents'
@@ -95,7 +95,7 @@ export default function Home() {
   
   return (    
      <div className='flex bg-base-100 flex-grow'>
-      <ShipStateContext.Provider value={ {state, dispatch} }>
+      <ShipEditorContext.Provider value={ {state, dispatch} }>
         { !showLoadShip && <ShipList selectedShipID={selectedShipId} 
                                      onShipSeleced={ (id) => { setselectedShipId(id); resetIdSequences(id) }} 
                                      onLoadShip={() => { setFileMode('load'); setShowLoadShip(true) }}  
@@ -104,7 +104,7 @@ export default function Home() {
         { showLoadShip && <FileList mode={fileMode} onClose={ () => setShowLoadShip(false) } 
                                     selectedName={ selectedShipId===-1 ? '' : state.ships.find((ship) => ship.id === selectedShipId)?.name || '' }
                                     onFileSelected={ (fileName) => fileOperation(fileName) } /> }
-      </ShipStateContext.Provider>
+      </ShipEditorContext.Provider>
      </div>    
   )
 }

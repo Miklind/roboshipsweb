@@ -4,6 +4,7 @@ import React, { useState, useContext } from 'react'
 import LayoutEditor from './LayoutEditor'
 import ProgramEditor from './ProgramEditor'
 import ShipInfoEditor from './ShipInfoEditor';
+import SimulationView from './SimulationView';
 import Image from 'next/image'
 
 
@@ -43,7 +44,7 @@ export default function ShipEditor( { selectedShipID }: IShipEditorProps) {
       {activeTab == 0 && <ShipInfoEditor selectedShipID={selectedShipID} />}
       {activeTab == 1 && <LayoutEditor selectedShipID={selectedShipID}  />}
       {activeTab == 2 && <ProgramEditor selectedShipID={selectedShipID} />}
-      {activeTab == 3 && <div></div>}
+      {activeTab == 3 && <SimulationView/>}
 
     </div>
 

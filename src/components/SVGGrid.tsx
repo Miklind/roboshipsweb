@@ -6,9 +6,10 @@ interface IRenderGridProps
     width: number
     scale: number
     scrollPos: IPoint
+    gridInterval: number
 }
 
-export default function SVGGrid({ height, width, scale, scrollPos} : IRenderGridProps ) {
+export default function SVGGrid({ height, width, scale, scrollPos, gridInterval} : IRenderGridProps ) {
 
     function scaledToSVG(n: number): number {
         return n * scale;
@@ -20,7 +21,7 @@ export default function SVGGrid({ height, width, scale, scrollPos} : IRenderGrid
     const ySize = height / scale;
 
     const grid = [];
-    const gridInterval = 10;
+  
 
     const placementX = scrollPos.x%gridInterval
     const placementY = scrollPos.y%gridInterval

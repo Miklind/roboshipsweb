@@ -1,8 +1,8 @@
 "use client"
 
-import { IRoboshipsState, IRoboshipsAction } from "@/modules/shipstatecontext"
+import { IRoboshipsAction } from "@/modules/shipEditorContext"
 import { useContext, useState, useEffect } from "react"
-import ShipStateContext from "@/modules/shipstatecontext"
+import ShipEditorContext from "@/modules/shipEditorContext"
 import ShipListItem from "./ShipListItem"
 
 interface IShipListProps {
@@ -15,7 +15,7 @@ interface IShipListProps {
 
 export default function ShipList( { selectedShipID, onShipSeleced, onLoadShip,onSaveShip }: IShipListProps) {
 
-    const {state, dispatch} = useContext(ShipStateContext)
+    const {state, dispatch} = useContext(ShipEditorContext)
     const [shipAdded, setshipAdded] = useState(false)
 
     useEffect(() => {

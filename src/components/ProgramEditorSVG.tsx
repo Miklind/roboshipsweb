@@ -1,12 +1,12 @@
 import React, { useRef, useState, useContext, useEffect, useMemo } from 'react';
 import { IShip } from '@/modules/roboships/ship';
-import ShipStateContext,  { IRoboshipsPositionAction, 
+import ShipEditorContext,  { IRoboshipsPositionAction, 
                             IProgramComponentToAdd, 
                             IRoboshipsAddProgramComponentAction, 
                             IRoboshipsConnectShipCommandAction,
                             IRoboshipsNumberAction,
                             IRoboshipsSetParameterAction,
-                            IRoboshipsSetConstParameterAction}  from '@/modules/shipstatecontext';
+                            IRoboshipsSetConstParameterAction}  from '@/modules/shipEditorContext';
 import SVGGrid from './SVGGrid';
 import { useDebouncedCallback } from 'use-debounce';
 import SVGProgram from './SVGProgram';
@@ -43,7 +43,7 @@ const scrollSizeY : number = 1000
 
 export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd }: IProgramEditorSVGProps) {
 
-    const { state, dispatch } = useContext(ShipStateContext)
+    const { state, dispatch } = useContext(ShipEditorContext)
     const svgDivRef = useRef<HTMLDivElement | null>(null);
     const [svgSize, setSvgSize] = useState({ height: 1, width: 1 })    
     const [selecteItemType, setSelectedItemType] = useState('')
@@ -321,10 +321,7 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
         setConstEdit({showConstEdit: true, commandId: commandId, paramId: paramId, position: position})
     }
 
-    const constEditiInitialValue = useMemo(() => {
-    
-        console.log('constEditiInitialValue')
-
+    const constEditiInitialValue = useMemo(() => {        
         if(ship === null) return 0;        
         const command = ship.program.find((command) => command.id === constEdit.commandId)
         if(command === undefined) return 0;            
@@ -332,9 +329,6 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
         if(parameter === undefined) return 0;
         
         return (parameter as IProgramConstParameter).value
-
-    
-
     }, [constEdit])
 
     return (
@@ -349,7 +343,7 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
                 onWheel={onWheelSVG}
                 onMouseDown={onMouseDownSVG}
             >
-                <SVGGrid height={svgSize.height} width={svgSize.width} scale={svgScale} scrollPos={svgScrollPos} />
+                <SVGGrid height={svgSize.height} width={svgSize.width} scale={svgScale} scrollPos={svgScrollPos} gridInterval={10} />
                 {ship !== null && <SVGProgram ship={ship} scale={svgScale} scrollPos={svgScrollPos} 
                                                itemSelected={(itemType, itemId)=>{setSelectedItemType(itemType); setSelectedItemID(itemId) }}
                                                connectionSelected={(selectedConnection)=> setSelectedConnection(selectedConnection) }
