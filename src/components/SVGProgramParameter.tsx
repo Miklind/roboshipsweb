@@ -1,15 +1,17 @@
 
-import { IProgramCommand, IProgramParameter } from "@/modules/roboships/programcomponents";
-import { commandHeight, commandWidth, commmandTitleHeight } from "./SVGProgramCommand";
+import { IProgramCommand, IProgramParameter, getParameterText } from "@/modules/roboships/programcomponents";
+import { IPoint, commandHeight, commandWidth, commmandTitleHeight, getParameterPosition } from '@/modules/roboships/shapeutils'
+
 
 interface ISVGProgramParameterProps {
     scale: number  
-    scrollPos: {x: number, y: number}
+    scrollPos: IPoint
     command: IProgramCommand
     parameter: IProgramParameter
+    openParamValueEdit: (commandId: number, paramId: number) => void
 }
 
-export default function SVGProgramParameter({ scale, command,  parameter, scrollPos } : ISVGProgramParameterProps ) {
+export default function SVGProgramParameter({ scale, command,  parameter, scrollPos, openParamValueEdit } : ISVGProgramParameterProps ) {
 
     function scaledToSVG(n: number): number {
         return n * scale;
@@ -18,32 +20,32 @@ export default function SVGProgramParameter({ scale, command,  parameter, scroll
     const paramIdx=command.parameters.indexOf(parameter)
     if(paramIdx===-1) return <></>
 
-    const width: number = command.parameters.length > 1 ? commandWidth / command.parameters.length : commandWidth
-    const height: number = commandHeight - commmandTitleHeight
-    const x= -scrollPos.x + command.position.x - commandWidth / 2 + paramIdx * width
-    const y= -scrollPos.y + command.position.y - commandHeight / 2 + commmandTitleHeight
+    let paramPos=getParameterPosition(command,paramIdx,false)
+    paramPos.position.x-=scrollPos.x
+    paramPos.position.y-=scrollPos.y
 
     return (<>
                 <rect 
-                x={scaledToSVG(x + 0.4)} 
-                y={scaledToSVG(y + 0.4)} 
-                width={scaledToSVG(width-0.8)} 
-                height={scaledToSVG(height-0.8)} 
+                x={scaledToSVG(paramPos.position.x + 0.4)} 
+                y={scaledToSVG(paramPos.position.y + 0.4)} 
+                width={scaledToSVG(paramPos.width-0.8)} 
+                height={scaledToSVG(paramPos.height-0.8)} 
                 rx={scaledToSVG(1)}  
                 stroke="black" 
-                fill="lightgray"                 
+                fill="lightgray"
+                onClick={(e) => { if(e.button==0 && parameter.parameter==="Const") openParamValueEdit(command.id, parameter.id) }}                 
                 />   
 
                 <text className='select-none' 
-                x={scaledToSVG(x + width/2)} 
-                y={scaledToSVG(y + height/2)} 
+                x={scaledToSVG(paramPos.position.x + paramPos.width/2)} 
+                y={scaledToSVG(paramPos.position.y + paramPos.height/2)} 
                 style={{ fontSize: `${scaledToSVG(1.8)}px` }} 
                 fill="black" 
                 textAnchor="middle" 
                 dominantBaseline="middle"
-                
+                onClick={(e) => { if(e.button==0 && parameter.parameter==="Const") openParamValueEdit(command.id, parameter.id) }}                   
                 >
-                    {parameter.displayTarget ? `${parameter.targetType}.${parameter.parameter}` : parameter.parameter}
+                    {getParameterText(parameter)}
             </text>
     </>);
 }

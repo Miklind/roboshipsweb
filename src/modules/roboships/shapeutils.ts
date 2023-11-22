@@ -1,8 +1,33 @@
-import { Result } from "postcss";
+import { IProgramCommand, IProgramParameter } from "./programcomponents";
+
+export const commandWidth: number = 32
+export const commandHeight: number = 8
+export const commmandTitleHeight: number = 3
+
 
 export interface IPoint {
   x: number;
   y: number;
+}
+
+export interface IRectPosition
+{
+  position: IPoint
+  width: number
+  height: number
+  
+}
+
+export function getParameterPosition(command: IProgramCommand, parameterIdx: number, centered: boolean) : IRectPosition
+{
+
+
+  const paramWidth: number = command.parameters.length > 1 ? commandWidth / command.parameters.length : commandWidth
+  const paramHeight: number = commandHeight - commmandTitleHeight
+  const paramX=  command.position.x - commandWidth / 2 + parameterIdx * paramWidth + (centered ? paramWidth / 2 : 0)
+  const paramY=  command.position.y - commandHeight / 2 + commmandTitleHeight + (centered ? paramHeight / 2 : 0)
+
+  return { position: { x: paramX, y: paramY }, width: paramWidth, height: paramHeight } 
 }
 
 export function isPointInsidePolygon(point: IPoint, shape: IPoint[], shapePos: IPoint) : boolean  

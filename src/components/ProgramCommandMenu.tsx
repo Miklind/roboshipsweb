@@ -1,9 +1,10 @@
 
+import { IPoint } from "@/modules/roboships/shapeutils"
 
 interface ProgramCommandMenuProps {    
     menuTargetCommandId: number
     onExecuteMenuCommand: (menuTargetCommandId: number, command: string ) => void
-    position: {x: number, y: number}
+    position: IPoint
     closeMenu: () => void
 }
 

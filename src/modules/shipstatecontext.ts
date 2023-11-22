@@ -4,7 +4,7 @@ import ShipComponentFactory from "./roboships/shipComponentFactory"
 import ProgramCommandFactory from "./roboships/programcommandfactory"
 import ProgramParameterFactory from './roboships/programparameterFactory'
 import { IPoint } from "./roboships/shapeutils"
-import { IProgramCommand, IProgramParameter } from './roboships/programcomponents'
+import { IProgramCommand, IProgramConstParameter, IProgramParameter } from './roboships/programcomponents'
 
 interface IShipStateContext {
   state: IRoboshipsState;
@@ -29,7 +29,7 @@ export interface IRoboshipsAction {
 
 export interface IRoboshipsStringAction extends IRoboshipsAction {
   shipID: number
-  value: string  
+  value: string
 }
 
 export interface IRoboshipsAddShipComponentAction extends IRoboshipsAction {
@@ -65,7 +65,7 @@ export interface IRoboshipsAddShipFromDataAction extends IRoboshipsAction {
   shipToAdd: IShip
 }
 
-export interface IRoboshipsNumberAction extends IRoboshipsAction {  
+export interface IRoboshipsNumberAction extends IRoboshipsAction {
   shipID: number
   value: number
 }
@@ -76,6 +76,14 @@ export interface IRoboshipsSetParameterAction extends IRoboshipsAction {
   component: IProgramComponentToAdd
   setInCommand: IProgramCommand
   replaceParam: IProgramParameter
+}
+
+export interface IRoboshipsSetConstParameterAction extends IRoboshipsAction {
+  actionType: 'set-const-parameter'
+  shipID: number
+  commandID: number
+  parameterID: number
+  value: number
 }
 
 
@@ -136,9 +144,44 @@ export function shipStateReducer(state: IRoboshipsState, action: IRoboshipsActio
     case "set-program-parameter":
       return performSetProgramParameter(state, action);
 
+    case "set-const-parameter":
+      return performSetConstParameter(state, action);
+
     default:
       return state;
   }
+}
+
+function performSetConstParameter(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
+  let setConstParameterAction = action as IRoboshipsSetConstParameterAction;
+  let modifiedShips = state.ships.map((ship) => {
+    if (ship.id === setConstParameterAction.shipID) {
+
+      let modifiedProgram = ship.program.map((command) => {
+        if (command.id === setConstParameterAction.commandID) {
+          let modifiedParameters = command.parameters.map((parameter) => {
+            if (parameter.id === setConstParameterAction.parameterID) {
+              
+              return {...parameter as IProgramConstParameter, value: setConstParameterAction.value}
+              
+            }
+            else {
+              return parameter
+            }
+          })
+          return { ...command, parameters: modifiedParameters }
+        }
+        else {
+          return command
+        }
+      })
+      return { ...ship, program: modifiedProgram }
+    }
+    else {
+      return ship
+    }
+  });
+  return { ...state, ships: modifiedShips }
 }
 
 function performSetProgramParameter(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
@@ -248,7 +291,7 @@ function performDeleteProgramCommand(state: IRoboshipsState, action: IRoboshipsA
   });
 
   // Remove connection to deleted command
-  
+
   modifiedShips = modifiedShips.map((ship) => {
     if (ship.id === deleteShipCommandAction.shipID) {
       let modifiedCommands = ship.program.map((command) => {
@@ -383,7 +426,7 @@ function performSetShipAuthor(state: IRoboshipsState, action: IRoboshipsAction):
 }
 
 function performSetShipDescription(state: IRoboshipsState, action: IRoboshipsAction): IRoboshipsState {
-     
+
   let setShipDescriptionAction = action as IRoboshipsStringAction;
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === setShipDescriptionAction.shipID) {
@@ -443,14 +486,14 @@ function performAddProgramCommand(state: IRoboshipsState, action: IRoboshipsActi
 
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === addProgramComponentAction.shipID) {
-  
-        let newProgramComponent = ProgramCommandFactory.createProgramCommand(addProgramComponentAction.component.programComponent, addProgramComponentAction.component.programComponentTarget, -1)
-        newProgramComponent.position = addProgramComponentAction.position
 
-        let modifiedProgram = [...ship.program, newProgramComponent]
+      let newProgramComponent = ProgramCommandFactory.createProgramCommand(addProgramComponentAction.component.programComponent, addProgramComponentAction.component.programComponentTarget, -1)
+      newProgramComponent.position = addProgramComponentAction.position
 
-        return { ...ship, program: modifiedProgram }
-      
+      let modifiedProgram = [...ship.program, newProgramComponent]
+
+      return { ...ship, program: modifiedProgram }
+
     }
     else {
       return ship

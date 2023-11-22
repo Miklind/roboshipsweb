@@ -1,9 +1,11 @@
+import { IPoint } from "@/modules/roboships/shapeutils"
+
 interface IRenderGridProps 
 { 
     height: number
     width: number
     scale: number
-    scrollPos: {x: number, y: number}
+    scrollPos: IPoint
 }
 
 export default function SVGGrid({ height, width, scale, scrollPos} : IRenderGridProps ) {

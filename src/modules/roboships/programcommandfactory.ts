@@ -16,7 +16,6 @@ export default class ProgramCommandFactory
         .withCommandType(commandDef.commandType)
         .withNumParameters(commandDef.numParameters)
         .withNumConnections(commandDef.numConnections)
-        .withDisplayTarget(commandDef.displayTarget)
         .build()
     }     
 }
@@ -30,7 +29,6 @@ class ProgramCommandBuilder
     parameters: IProgramParameter[] = []
     connectedTo: number[] = []
     position : IPoint = {x: 0, y: 0}     
-    displayTarget: boolean = true  
 
     private constructor() {}
 
@@ -72,7 +70,7 @@ class ProgramCommandBuilder
     {
         for(let i = 0; i < numParameters; i++)
         {
-            this.parameters.push(ProgramParameterFactory.createProgramParameter("Undefined", "general", -1))
+            this.parameters.push(ProgramParameterFactory.createProgramParameter("Const", "General", -1))
         }
         return this
     }
@@ -86,12 +84,6 @@ class ProgramCommandBuilder
         return this
     }
 
-    public withDisplayTarget(displayTarget: boolean) : ProgramCommandBuilder
-    {
-        this.displayTarget = displayTarget
-        return this
-    }
-
     public build() : IProgramCommand
     {
         let programCommand = createProgramCommand()
@@ -102,7 +94,6 @@ class ProgramCommandBuilder
         programCommand.parameters = this.parameters
         programCommand.connectedTo = this.connectedTo
         programCommand.position = this.position
-        programCommand.displayTarget = this.displayTarget
         return programCommand      
     }
 }

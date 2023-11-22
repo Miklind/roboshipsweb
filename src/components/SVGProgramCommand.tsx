@@ -1,27 +1,19 @@
-import { IProgramCommand } from "@/modules/roboships/programcomponents";
+import { IProgramCommand, getCommandText } from "@/modules/roboships/programcomponents";
 import SVGProgramParameter from "./SVGProgramParameter";
+import { IPoint,commandHeight, commandWidth, commmandTitleHeight } from '@/modules/roboships/shapeutils'
 
 interface ISVGProgramCommandProps {
     scale: number  
     command: IProgramCommand
-    scrollPos: {x: number, y: number}
+    scrollPos: IPoint
     itemSelected: (itemType: string, itemID: number) => void 
     openContextMenu: (commandID: number) => void
+    openParamValueEdit: (commandId: number, paramId: number) => void
 }
 
-export interface ISelectedConnection 
-{
-    commandID: number
-    connectionIdx: number
-    position: {x: number, y: number}
-    highlighted: boolean    
-}
 
-export const commandWidth: number = 32
-export const commandHeight: number = 8
-export const commmandTitleHeight: number = 3
 
-export default function SVGProgramCommand({  scale, command, scrollPos, itemSelected, openContextMenu } : ISVGProgramCommandProps ) {
+export default function SVGProgramCommand({  scale, command, scrollPos, itemSelected, openContextMenu, openParamValueEdit } : ISVGProgramCommandProps ) {
 
     function scaledToSVG(n: number): number {
         return n * scale;
@@ -83,16 +75,17 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 onMouseDown={(e) => { if(e.button==0) itemSelected('command', command.id) }}
                 onContextMenu={(e) => onCommandContextMenu(e, command.id)}
                 >
-                    {command.displayTarget ? `${command.targetType}.${command.command}` : command.command }
+                    {getCommandText(command)}
             </text>
       
             {
-                command.parameters.map((parameter, index) => {
+                command.parameters.map((parameter) => {
                     return <SVGProgramParameter key={parameter.id} 
                                                 scale={scale}
                                                 scrollPos={scrollPos}
                                                 command={command}
                                                 parameter={parameter} 
+                                                openParamValueEdit={(commandId, paramId) => openParamValueEdit(commandId, paramId)}
                                               />
                 })
             

@@ -1,4 +1,4 @@
-import { IProgramParameter, createProgramParameter } from "./programcomponents";
+import { IProgramParameter, IProgramConstParameter, createProgramParameter, createProgramConstParameter } from "./programcomponents";
 import { IParameterDefinition, parameterDefs } from "./programcomponents";
 
 
@@ -9,13 +9,24 @@ export default class ProgramParameterFactory
         const parameterDef: IParameterDefinition | undefined = parameterDefs.find(c => c.parameter === parameter && c.targetType === targetType) 
         if(parameterDef===undefined) return createProgramParameter()
 
-        let programParameter: IProgramParameter = createProgramParameter()
+
+        let programParameter : IProgramParameter
+
+        if(targetType === 'General' && parameter==='Const')
+        {   
+            programParameter = createProgramConstParameter()            
+        }
+        else
+        {
+            programParameter = createProgramParameter()        
+        }
+                    
         programParameter.parameter = parameter
         programParameter.targetType = targetType
-        programParameter.targetIdx = targetIdx
-        programParameter.displayTarget = parameterDef.displayTarget
+        programParameter.targetIdx = targetIdx                
+
         return programParameter
-      
+              
     }     
 }
 

@@ -5,18 +5,35 @@ import ShipStateContext,  { IRoboshipsPositionAction,
                             IRoboshipsAddProgramComponentAction, 
                             IRoboshipsConnectShipCommandAction,
                             IRoboshipsNumberAction,
-                            IRoboshipsSetParameterAction}  from '@/modules/shipstatecontext';
+                            IRoboshipsSetParameterAction,
+                            IRoboshipsSetConstParameterAction}  from '@/modules/shipstatecontext';
 import SVGGrid from './SVGGrid';
 import { useDebouncedCallback } from 'use-debounce';
 import SVGProgram from './SVGProgram';
-import { commandHeight, commandWidth, commmandTitleHeight } from './SVGProgramCommand';
-import { ISelectedConnection } from './SVGProgramCommand';
-import { isPointInsideRect } from '@/modules/roboships/shapeutils';
+import { commandHeight, commandWidth, commmandTitleHeight } from '@/modules/roboships/shapeutils'
+import { ISelectedConnection } from './SVGProgramCommandConnection';
+import { IPoint, isPointInsideRect, getParameterPosition } from '@/modules/roboships/shapeutils';
 import SVGScrollBars from './SVGScrollBars';
 import ProgramCommandMenu from './ProgramCommandMenu';
-import { IProgramCommand, IProgramParameter } from '@/modules/roboships/programcomponents';
+import { IProgramCommand, IProgramConstParameter, IProgramParameter } from '@/modules/roboships/programcomponents';
+import ConstValueEdit from "./ConstValueEdit";
 
-interface ILayoutSVGProps {
+interface IProgramCommandMenuParams
+{
+    show: boolean
+    commandId: number
+    position: IPoint
+}
+
+interface IConstEditParams
+{
+    showConstEdit: boolean
+    commandId: number
+    paramId: number
+    position: IPoint
+}
+
+interface IProgramEditorSVGProps {
     selectedShipID: number
     programComponentToAdd: IProgramComponentToAdd
 }
@@ -24,7 +41,7 @@ interface ILayoutSVGProps {
 const scrollSizeX : number = 1000
 const scrollSizeY : number = 1000
 
-export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd }: ILayoutSVGProps) {
+export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd }: IProgramEditorSVGProps) {
 
     const { state, dispatch } = useContext(ShipStateContext)
     const svgDivRef = useRef<HTMLDivElement | null>(null);
@@ -35,9 +52,8 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
     const [svgScrollPos, setSVGScrollPos] = useState({ x: 0, y: 0 })
     const [svgIsMouseDown, setSVGIsMouseDown] = useState(false)
     const [selectedConnection, setSelectedConnection] = useState<ISelectedConnection | null>(null)
-    const [showProgramCommandMenu, setShowProgramCommandMenu] = useState(false)
-    const [menuTargetCommandId, setMenuTargetCommandId] = useState(-1)
-    const [menuPosition, setMenuPosition] = useState({x: 0, y: 0})
+    const [programCommandMenu, setProgramCommandMenu] = useState<IProgramCommandMenuParams>({show: false, commandId: -1, position: {x: 0, y: 0}})
+    const [constEdit, setConstEdit] = useState<IConstEditParams>({showConstEdit: false, commandId: -1, paramId: -1, position: {x: 0, y: 0}})
 
     const debouncedUpdateDimensions = useDebouncedCallback(        
         () => {
@@ -95,13 +111,10 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
         if(resultCommand === null) return {command: null, param: null}
                
         for(let paramIdx=0; paramIdx<resultCommand.parameters.length; paramIdx++)
-        {          
-            const paramWidth: number = resultCommand.parameters.length > 1 ? commandWidth / resultCommand.parameters.length : commandWidth
-            const paramHeight: number = commandHeight - commmandTitleHeight
-            const paramXCenter=  resultCommand.position.x - commandWidth / 2 + paramIdx * paramWidth + paramWidth / 2
-            const paramYCenter=  resultCommand.position.y - commandHeight / 2 + commmandTitleHeight + paramHeight / 2
-           
-            if(isPointInsideRect({x: x, y: y}, {x: paramXCenter, y: paramYCenter}, paramWidth, paramHeight))
+        {       
+            const paramPos = getParameterPosition(resultCommand, paramIdx, true)
+                      
+            if(isPointInsideRect({x: x, y: y}, {x: paramPos.position.x, y: paramPos.position.y}, paramPos.width, paramPos.height))
             {
                 return {command: resultCommand, param: resultCommand.parameters[paramIdx]}                
             }
@@ -174,11 +187,9 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
             if(commandAndParam.command !== null && commandAndParam.param !== null)
             {
                 const action: IRoboshipsSetParameterAction = { actionType: 'set-program-parameter', shipID: selectedShipID, component: programComponentToAdd, setInCommand: commandAndParam.command, replaceParam: commandAndParam.param }
-                dispatch(action)        
-            
+                dispatch(action)                    
             }
-        }
-            
+        }            
     }
 
     function onWheelSVG(e: React.WheelEvent<SVGSVGElement>) {
@@ -260,8 +271,29 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
             }
         }
             
-        setShowProgramCommandMenu(false)
+        setProgramCommandMenu({show: false, commandId: -1, position: {x: 0, y: 0}})
     }
+
+    function onExecuteSetConstParamValue(commandId: number, parameterId: number, value: number)
+    {
+        if(ship !== null)
+        {
+            const command = ship.program.find((command) => command.id === commandId)
+            if(command !== undefined)
+            {
+                const parameter = command.parameters.find((parameter) => parameter.id === parameterId)
+                if(parameter !== undefined)
+                {
+                    const action: IRoboshipsSetConstParameterAction = { actionType: 'set-const-parameter', shipID: selectedShipID, commandID: commandId, parameterID: parameterId, value: value }
+                    dispatch(action)
+                }
+            }
+        }
+
+        setConstEdit({showConstEdit: false, commandId: -1, paramId: -1, position: {x: 0, y:0 }})
+    }
+
+    
 
     function openCommandContextMenu(commandId: number)
     {
@@ -270,10 +302,40 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
         if(command === undefined) return;            
         const position = {x: command.position.x * svgScale - svgScrollPos.x * svgScale, y: command.position.y * svgScale - svgScrollPos.y * svgScale}
         
-        setMenuPosition(position)
-        setMenuTargetCommandId(commandId)
-        setShowProgramCommandMenu(true)                    
+        setProgramCommandMenu({show: true, commandId: commandId, position: position})
+        
     }
+
+    function openParamValueEdit(commandId: number, paramId: number)
+    {        
+        if(ship === null) return;        
+        const command = ship.program.find((command) => command.id === commandId)
+        if(command === undefined) return;            
+        const parameter = command.parameters.find((parameter) => parameter.id === paramId)
+        if(parameter === undefined) return;
+     
+        let paramPos=getParameterPosition(command,command.parameters.indexOf(parameter),true)
+        const position = {x: paramPos.position.x * svgScale - svgScrollPos.x * svgScale, y: paramPos.position.y * svgScale - svgScrollPos.y * svgScale}
+
+
+        setConstEdit({showConstEdit: true, commandId: commandId, paramId: paramId, position: position})
+    }
+
+    const constEditiInitialValue = useMemo(() => {
+    
+        console.log('constEditiInitialValue')
+
+        if(ship === null) return 0;        
+        const command = ship.program.find((command) => command.id === constEdit.commandId)
+        if(command === undefined) return 0;            
+        const parameter = command.parameters.find((parameter) => parameter.id === constEdit.paramId)
+        if(parameter === undefined) return 0;
+        
+        return (parameter as IProgramConstParameter).value
+
+    
+
+    }, [constEdit])
 
     return (
     
@@ -292,16 +354,19 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
                                                itemSelected={(itemType, itemId)=>{setSelectedItemType(itemType); setSelectedItemID(itemId) }}
                                                connectionSelected={(selectedConnection)=> setSelectedConnection(selectedConnection) }
                                                selectedConnection={selectedConnection}
-                                               openContextMenu={ (commandId) => openCommandContextMenu(commandId)} 
-                                               
+                                               openContextMenu={ (commandId) => openCommandContextMenu(commandId)}
+                                               openParamValueEdit={ (commandId, paramId) => openParamValueEdit(commandId, paramId) }                                                
                 /> }
 
                 <SVGScrollBars height={svgSize.height} width={svgSize.width} maxHeight={scrollSizeY} maxWidth={scrollSizeX} scale={svgScale} scrollPos={svgScrollPos} />
             </svg>
-            {showProgramCommandMenu && <ProgramCommandMenu menuTargetCommandId={menuTargetCommandId} 
+            {programCommandMenu.show && <ProgramCommandMenu menuTargetCommandId={programCommandMenu.commandId} 
                                                            onExecuteMenuCommand={ (target,command) => onExecuteMenuCommand(target, command)} 
-                                                           position={menuPosition} 
-                                                           closeMenu={() => setShowProgramCommandMenu(false)} />}
+                                                           position={programCommandMenu.position} 
+                                                           closeMenu={() => setProgramCommandMenu({show: false, commandId: -1, position: {x: 0, y: 0}})} />}
+            {constEdit.showConstEdit && <ConstValueEdit commandId={constEdit.commandId} parameterId={constEdit.paramId} 
+                                                        initialValue={constEditiInitialValue} position={constEdit.position} 
+                                                        setConstParamValue={ (commandId , parameterId , value) => onExecuteSetConstParamValue(commandId,parameterId,value) } /> }
         </div>      
     )
 }
