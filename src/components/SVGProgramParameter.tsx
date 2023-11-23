@@ -1,6 +1,6 @@
 
 import { IProgramCommand, IProgramParameter, getParameterText } from "@/modules/roboships/programcomponents";
-import { IPoint, commandHeight, commandWidth, commmandTitleHeight, getParameterPosition } from '@/modules/roboships/shapeutils'
+import { IPoint, COMMAND_HEIGHT, COMMAND_WIDTH, COMMAND_TITLE_HEIGHT, getParameterPosition } from '@/modules/roboships/shapeutils'
 
 
 interface ISVGProgramParameterProps {

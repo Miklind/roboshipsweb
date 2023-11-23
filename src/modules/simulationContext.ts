@@ -1,10 +1,12 @@
 import { createContext } from 'react'
 import { IPoint } from './roboships/shapeutils';
 import { IShipEditorState } from './shipEditorContext';
+import { DESIGN_ORIGO } from './shipEditorContext';
 
 export interface IShipComponentSimulationState {
     id: number
     rotation: number
+    position: IPoint
 }
 
 export interface IShipProgramSimulationState {
@@ -69,6 +71,7 @@ function performInitSimulation(state: ISimulationState, action: ISimulationActio
             components: ship.shipComponents.map(component => {
                 const simComponent: IShipComponentSimulationState = {
                     id: component.id,
+                    position: { x: component.position.x - DESIGN_ORIGO.x , y: component.position.y - DESIGN_ORIGO.y },
                     rotation: 0
                 }
                 return simComponent

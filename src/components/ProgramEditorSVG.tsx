@@ -10,7 +10,7 @@ import ShipEditorContext,  { IRoboshipsPositionAction,
 import SVGGrid from './SVGGrid';
 import { useDebouncedCallback } from 'use-debounce';
 import SVGProgram from './SVGProgram';
-import { commandHeight, commandWidth, commmandTitleHeight } from '@/modules/roboships/shapeutils'
+import { COMMAND_HEIGHT, COMMAND_WIDTH, COMMAND_TITLE_HEIGHT } from '@/modules/roboships/shapeutils'
 import { ISelectedConnection } from './SVGProgramCommandConnection';
 import { IPoint, isPointInsideRect, getParameterPosition } from '@/modules/roboships/shapeutils';
 import SVGScrollBars from './SVGScrollBars';
@@ -93,7 +93,7 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
         {
             for(let command of ship.program)
             {
-                if(command.id !== exceptCommandId && isPointInsideRect({x: x, y: y}, {x: command.position.x, y: command.position.y}, commandWidth, commandHeight))
+                if(command.id !== exceptCommandId && isPointInsideRect({x: x, y: y}, {x: command.position.x, y: command.position.y}, COMMAND_WIDTH, COMMAND_HEIGHT))
                 {
                     return command
                     break;                      
@@ -245,8 +245,8 @@ export default function ProgramEditorSVG({ selectedShipID, programComponentToAdd
         y=y+svgScrollPos.y
 
         // Clamp positions
-        x = Math.max(commandWidth/2, Math.min(x, scrollSizeX  - commandWidth/2));
-        y = Math.max(commandHeight/2, Math.min(y, scrollSizeY - commandHeight/2));
+        x = Math.max(COMMAND_WIDTH/2, Math.min(x, scrollSizeX  - COMMAND_WIDTH/2));
+        y = Math.max(COMMAND_HEIGHT/2, Math.min(y, scrollSizeY - COMMAND_HEIGHT/2));
 
         return { x: Math.round(x), y: Math.round(y) }
     }    

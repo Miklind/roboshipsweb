@@ -6,6 +6,8 @@ import ProgramParameterFactory from './roboships/programparameterFactory'
 import { IPoint } from "./roboships/shapeutils"
 import { IProgramCommand, IProgramConstParameter, IProgramParameter } from './roboships/programcomponents'
 
+export const DESIGN_ORIGO: IPoint = { x: 35, y: 50 }
+
 export interface IShipEditorState {
   ships: IShip[]
 }
@@ -374,7 +376,7 @@ function performAddShip(state: IShipEditorState, action: IRoboshipsAction): IShi
   if (state.ships.length < 8) {
     let newShip = createShip()
     let hull = ShipComponentFactory.createHull()
-    hull.position = { x: 35, y: 50 }
+    hull.position = DESIGN_ORIGO
     newShip.shipComponents.push(hull);
 
     let startCommand = ProgramCommandFactory.createProgramCommand("Start", "General", -1)

@@ -1,8 +1,8 @@
 import { IProgramCommand, IProgramParameter } from "./programcomponents";
 
-export const commandWidth: number = 32
-export const commandHeight: number = 8
-export const commmandTitleHeight: number = 3
+export const COMMAND_WIDTH: number = 32
+export const COMMAND_HEIGHT: number = 8
+export const COMMAND_TITLE_HEIGHT: number = 3
 
 
 export interface IPoint {
@@ -22,10 +22,10 @@ export function getParameterPosition(command: IProgramCommand, parameterIdx: num
 {
 
 
-  const paramWidth: number = command.parameters.length > 1 ? commandWidth / command.parameters.length : commandWidth
-  const paramHeight: number = commandHeight - commmandTitleHeight
-  const paramX=  command.position.x - commandWidth / 2 + parameterIdx * paramWidth + (centered ? paramWidth / 2 : 0)
-  const paramY=  command.position.y - commandHeight / 2 + commmandTitleHeight + (centered ? paramHeight / 2 : 0)
+  const paramWidth: number = command.parameters.length > 1 ? COMMAND_WIDTH / command.parameters.length : COMMAND_WIDTH
+  const paramHeight: number = COMMAND_HEIGHT - COMMAND_TITLE_HEIGHT
+  const paramX=  command.position.x - COMMAND_WIDTH / 2 + parameterIdx * paramWidth + (centered ? paramWidth / 2 : 0)
+  const paramY=  command.position.y - COMMAND_HEIGHT / 2 + COMMAND_TITLE_HEIGHT + (centered ? paramHeight / 2 : 0)
 
   return { position: { x: paramX, y: paramY }, width: paramWidth, height: paramHeight } 
 }

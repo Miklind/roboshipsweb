@@ -1,6 +1,6 @@
 import { IProgramCommand, getCommandText } from "@/modules/roboships/programcomponents";
 import SVGProgramParameter from "./SVGProgramParameter";
-import { IPoint,commandHeight, commandWidth, commmandTitleHeight } from '@/modules/roboships/shapeutils'
+import { IPoint,COMMAND_HEIGHT, COMMAND_WIDTH, COMMAND_TITLE_HEIGHT } from '@/modules/roboships/shapeutils'
 
 interface ISVGProgramCommandProps {
     scale: number  
@@ -28,10 +28,10 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
     return (
         <>                                
             {command.commandType==="command" && <rect 
-                x={scaledToSVG(-scrollPos.x + command.position.x - commandWidth / 2)} 
-                y={scaledToSVG(-scrollPos.y + command.position.y - commandHeight / 2)} 
-                width={scaledToSVG(commandWidth)} 
-                height={scaledToSVG(commandHeight)} 
+                x={scaledToSVG(-scrollPos.x + command.position.x - COMMAND_WIDTH / 2)} 
+                y={scaledToSVG(-scrollPos.y + command.position.y - COMMAND_HEIGHT / 2)} 
+                width={scaledToSVG(COMMAND_WIDTH)} 
+                height={scaledToSVG(COMMAND_HEIGHT)} 
                 rx={scaledToSVG(1)}  
                 stroke="black" 
                 fill="white" 
@@ -40,12 +40,12 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
             />}
 
             {command.commandType==="condition" && <polygon 
-                points={`${scaledToSVG(-scrollPos.x + command.position.x - commandWidth / 2)},${scaledToSVG(-scrollPos.y + command.position.y - commandHeight / 2 + commmandTitleHeight)}
-                        ${scaledToSVG(-scrollPos.x + command.position.x - commandWidth / 2 - 2)},${scaledToSVG(-scrollPos.y + command.position.y + commmandTitleHeight / 2)}
-                         ${scaledToSVG(-scrollPos.x + command.position.x - commandWidth / 2)},${scaledToSVG(-scrollPos.y + command.position.y + commandHeight / 2)} 
-                         ${scaledToSVG(-scrollPos.x + command.position.x + commandWidth / 2)},${scaledToSVG(-scrollPos.y + command.position.y + commandHeight / 2)} 
-                         ${scaledToSVG(-scrollPos.x + command.position.x + commandWidth / 2 + 2)},${scaledToSVG(-scrollPos.y + command.position.y + commmandTitleHeight / 2  )} 
-                         ${scaledToSVG(-scrollPos.x + command.position.x + commandWidth / 2)},${scaledToSVG(-scrollPos.y + command.position.y - commandHeight / 2 + commmandTitleHeight)}                                                                                     
+                points={`${scaledToSVG(-scrollPos.x + command.position.x - COMMAND_WIDTH / 2)},${scaledToSVG(-scrollPos.y + command.position.y - COMMAND_HEIGHT / 2 + COMMAND_TITLE_HEIGHT)}
+                        ${scaledToSVG(-scrollPos.x + command.position.x - COMMAND_WIDTH / 2 - 2)},${scaledToSVG(-scrollPos.y + command.position.y + COMMAND_TITLE_HEIGHT / 2)}
+                         ${scaledToSVG(-scrollPos.x + command.position.x - COMMAND_WIDTH / 2)},${scaledToSVG(-scrollPos.y + command.position.y + COMMAND_HEIGHT / 2)} 
+                         ${scaledToSVG(-scrollPos.x + command.position.x + COMMAND_WIDTH / 2)},${scaledToSVG(-scrollPos.y + command.position.y + COMMAND_HEIGHT / 2)} 
+                         ${scaledToSVG(-scrollPos.x + command.position.x + COMMAND_WIDTH / 2 + 2)},${scaledToSVG(-scrollPos.y + command.position.y + COMMAND_TITLE_HEIGHT / 2  )} 
+                         ${scaledToSVG(-scrollPos.x + command.position.x + COMMAND_WIDTH / 2)},${scaledToSVG(-scrollPos.y + command.position.y - COMMAND_HEIGHT / 2 + COMMAND_TITLE_HEIGHT)}                                                                                     
                         `} 
                 stroke="black" 
                 fill="white" 
@@ -55,10 +55,10 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
                 />}
             
             <rect 
-                x={scaledToSVG(-scrollPos.x + command.position.x - commandWidth / 2)} 
-                y={scaledToSVG(-scrollPos.y + command.position.y - commmandTitleHeight/2 - (commandHeight-commmandTitleHeight) / 2)} 
-                width={scaledToSVG(commandWidth)} 
-                height={scaledToSVG(commmandTitleHeight)}   
+                x={scaledToSVG(-scrollPos.x + command.position.x - COMMAND_WIDTH / 2)} 
+                y={scaledToSVG(-scrollPos.y + command.position.y - COMMAND_TITLE_HEIGHT/2 - (COMMAND_HEIGHT-COMMAND_TITLE_HEIGHT) / 2)} 
+                width={scaledToSVG(COMMAND_WIDTH)} 
+                height={scaledToSVG(COMMAND_TITLE_HEIGHT)}   
                 stroke="black" 
                 fill="lightblue" 
                 onMouseDown={(e) => { if(e.button==0) itemSelected('command',command.id) }}
@@ -67,7 +67,7 @@ export default function SVGProgramCommand({  scale, command, scrollPos, itemSele
             
             <text className='select-none' 
                 x={scaledToSVG(-scrollPos.x + command.position.x)} 
-                y={scaledToSVG(-scrollPos.y + command.position.y - (commandHeight - commmandTitleHeight) / 2)} 
+                y={scaledToSVG(-scrollPos.y + command.position.y - (COMMAND_HEIGHT - COMMAND_TITLE_HEIGHT) / 2)} 
                 style={{ fontSize: `${scaledToSVG(2)}px` }} 
                 fill="black" 
                 textAnchor="middle" 

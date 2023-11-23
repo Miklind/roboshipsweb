@@ -9,10 +9,9 @@ interface SVGSimulationShipProps {
 }
 
 export default function SVGSimulationShip({ scale, ship, simShip }: SVGSimulationShipProps) {
-    let findHull = ship.shipComponents.filter((c) => c.componentType === 'hull')
-    if(findHull.length !== 1) { return null }
-
-    const hull = findHull[0]
+    const hull = ship.shipComponents.find((component) => component.componentType === 'hull')
+    if(!hull) return null;
+    
     const polygonData = getSimulationPolygonData(hull, simShip.position,simShip.rotation, scale);
     
     return (<>
