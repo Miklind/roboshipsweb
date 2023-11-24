@@ -1,10 +1,10 @@
 "use client"
 
 import React, { useState, useContext } from 'react'
-import LayoutEditor from './LayoutEditor'
-import ProgramEditor from './ProgramEditor'
+import LayoutEditor from './layoutEditor/LayoutEditor'
+import ProgramEditor from './programEditor/ProgramEditor'
 import ShipInfoEditor from './ShipInfoEditor';
-import SimulationView from './SimulationView';
+import SimulationView from './simulation/SimulationView';
 import Image from 'next/image'
 
 

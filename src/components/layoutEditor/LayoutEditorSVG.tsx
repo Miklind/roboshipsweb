@@ -3,7 +3,7 @@ import { IRoboshipsAddShipComponentAction, IRoboshipsPositionAction, IRoboshipsN
 import { IShip } from '@/modules/roboships/ship';
 import { IShipComponent, checkComponentPlacement } from '@/modules/roboships/shipcomponent';
 import ShipEditorContext from '@/modules/shipEditorContext';
-import SVGGrid from './SVGGrid';
+import SVGGrid from '../SVGGrid';
 import SVGShip from './SVGShip';
 import { useDebouncedCallback } from 'use-debounce';
 import ShipComponentMenu from './ShipComponentMenu';

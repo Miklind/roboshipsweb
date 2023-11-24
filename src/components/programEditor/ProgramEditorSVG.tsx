@@ -7,13 +7,13 @@ import ShipEditorContext,  { IRoboshipsPositionAction,
                             IRoboshipsNumberAction,
                             IRoboshipsSetParameterAction,
                             IRoboshipsSetConstParameterAction}  from '@/modules/shipEditorContext';
-import SVGGrid from './SVGGrid';
+import SVGGrid from '../SVGGrid';
 import { useDebouncedCallback } from 'use-debounce';
 import SVGProgram from './SVGProgram';
 import { COMMAND_HEIGHT, COMMAND_WIDTH, COMMAND_TITLE_HEIGHT } from '@/modules/roboships/shapeutils'
 import { ISelectedConnection } from './SVGProgramCommandConnection';
 import { IPoint, isPointInsideRect, getParameterPosition } from '@/modules/roboships/shapeutils';
-import SVGScrollBars from './SVGScrollBars';
+import SVGScrollBars from '../SVGScrollBars';
 import ProgramCommandMenu from './ProgramCommandMenu';
 import { IProgramCommand, IProgramConstParameter, IProgramParameter } from '@/modules/roboships/programcomponents';
 import ConstValueEdit from "./ConstValueEdit";
