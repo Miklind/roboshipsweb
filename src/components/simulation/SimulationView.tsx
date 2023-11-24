@@ -13,7 +13,10 @@ export default function SimulationView() {
     const [ simulationRunState, setSimulationRunState ] = useState('paused')
     const simulationStateRef = useRef(simulationState);
 
-    simulationStateRef.current = simulationState;
+
+    useEffect(() => {
+        simulationStateRef.current = simulationState;
+    }, [simulationState]);
 
     useEffect(() => {
         const action: ISimulationInitAction = { actionType: 'init-simulation', editorState: state }
