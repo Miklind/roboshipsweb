@@ -36,15 +36,12 @@ export default function SimulationView() {
             if(previousTimeRef.current !== -1) 
             {
                 const deltatime = timestamp - previousTimeRef.current;
-                console.log(deltatime)
-
                 let newSimState = simulateStep(simulationStateRef.current, state, deltatime/1000)                              
                 const action: ISimulationUpdateAction = { actionType: 'update-simulation', simState: newSimState }
                 simulationDispatch(action)
             }
-            frameIdRef.current = requestAnimationFrame(update);
-            
             previousTimeRef.current = timestamp;    
+            frameIdRef.current = requestAnimationFrame(update);                        
         };
 
         frameIdRef.current = requestAnimationFrame(update);

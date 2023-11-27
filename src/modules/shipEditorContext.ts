@@ -163,9 +163,9 @@ function performSetConstParameter(state: IShipEditorState, action: IRoboshipsAct
         if (command.id === setConstParameterAction.commandID) {
           let modifiedParameters = command.parameters.map((parameter) => {
             if (parameter.id === setConstParameterAction.parameterID) {
-              
-              return {...parameter as IProgramConstParameter, value: setConstParameterAction.value}
-              
+
+              return { ...parameter as IProgramConstParameter, value: setConstParameterAction.value }
+
             }
             else {
               return parameter
@@ -273,13 +273,22 @@ function performDisconnectProgramCommand(state: IShipEditorState, action: IRobos
 
 function performDeleteProgramCommand(state: IShipEditorState, action: IRoboshipsAction): IShipEditorState {
   let deleteShipCommandAction = action as IRoboshipsNumberAction;
+
   let modifiedShips = state.ships.map((ship) => {
     if (ship.id === deleteShipCommandAction.shipID) {
 
       let modifiedCommands = ship.program.filter((command) => {
 
         if (command.id === deleteShipCommandAction.value) {
-          return false
+
+          // Start command cannot be deleted
+
+          if(command.targetType === "General" && command.command === "Start") {
+            return true
+          }
+          else {
+            return false
+          }          
         }
         else {
           return true

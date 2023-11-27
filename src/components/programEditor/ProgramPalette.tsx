@@ -24,7 +24,7 @@ export default function ProgramPalette({ onComponentDrag }: IProgramPaletteProps
         let result: [string, ICommmandDefinition[], IParameterDefinition[]][] = [];
 
         for (const target of sortedTargetTypes) {
-            let matchingCommands = commandDefs.filter(command => command.targetType === target);
+            let matchingCommands = commandDefs.filter(command => (command.targetType === target) && command.command !== "Start");
             let matchingParameters = parameterDefs.filter(parameter => parameter.targetType === target);
 
             matchingCommands.sort((a, b) => a.command.localeCompare(b.command));
@@ -47,7 +47,7 @@ export default function ProgramPalette({ onComponentDrag }: IProgramPaletteProps
                         <p className='font-bold'>{item[0]}</p>
                         <ul className='flex-grow m-1 rounded p-1 list-none'>
 
-                            {item[1].map((command) => (
+                            {item[1].map((command) => (                                
                                 <li key={`${item[0]}${command.command}`} className='bg-gray-300 rounded m-1 p-1 cursor-pointer' draggable onDragStart={(e) => onDragStartList(e, "command", command.command, item[0])}>
                                     {command.command}
                                 </li>

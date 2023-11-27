@@ -12,10 +12,6 @@ interface SVGShipProps {
 
 export default function SVGShip({ scale, validComponents, ship, componentSelected, openContextMenu }: SVGShipProps) {
 
-    function scaledToSVG(n: number): number {
-        return n * scale;
-    }
-
     return (<>
         {ship.shipComponents.map((component, index) => {
             const polygonData = getPolygonData(component, scale);        
