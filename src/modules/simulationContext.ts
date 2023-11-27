@@ -90,7 +90,7 @@ function performInitSimulation(state: ISimulationState, action: ISimulationActio
             position: { x: Math.random() * 1000, y: Math.random() * 1000 },
             rotation: shipRotation,
             targetRotation: shipRotation,
-            speed: 1,
+            speed: 10,
             targetSpeed: 1,
             health: 100,
             program: {

@@ -12,6 +12,10 @@ export default function SVGSimulationShip({ scale, ship, simShip }: SVGSimulatio
     const hull = ship.shipComponents.find((component) => component.componentType === 'hull')
     if(!hull) return null;
     
+    function scaledToSVG(n: number): number {
+        return n * scale;
+    }
+
     const polygonData = getSimulationPolygonData(hull, simShip.position,simShip.rotation, scale);
     
     return (<>
@@ -21,7 +25,7 @@ export default function SVGSimulationShip({ scale, ship, simShip }: SVGSimulatio
             transform={polygonData.transform}
             fill={polygonData.fillColor}
             stroke={  polygonData.strokeColor }
-            strokeWidth={polygonData.strokeWidth}
+            strokeWidth={ scaledToSVG(polygonData.strokeWidth)}
             strokeLinejoin='round'            
         />
     </>)

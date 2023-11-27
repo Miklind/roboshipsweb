@@ -31,7 +31,7 @@ export default function SVGShipComponent({ shipComponent, valid, scale, componen
             transform={polygonData.transform}
             fill={polygonData.fillColor}
             stroke={  valid ?  polygonData.strokeColor : 'red'}
-            strokeWidth={polygonData.strokeWidth}
+            strokeWidth={scaledToSVG(polygonData.strokeWidth)}
             strokeLinejoin='round'
             onMouseDown={(e) => { if(e.button===0) componentSelected(polygonData.id) }}
             onContextMenu={(e) => onCommandContextMenu(e, shipComponent.id)}

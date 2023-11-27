@@ -23,7 +23,7 @@ export default class ShipComponentFactory
                                    .withComponentType('hull')
                                    .withMoveable(false)
                                    .withPoints(ShipComponentFactory.createHullPoints(20))
-                                   .withVisual('lavender', 'black', 5)
+                                   .withVisual('lavender', 'black', 0.5)
                                    .build()        
     }
 
@@ -32,7 +32,7 @@ export default class ShipComponentFactory
         return ShipComponentBuilder.create()
                                    .withComponentType('gun')                                   
                                    .withPoints(ShipComponentFactory.createSpeherePoints(8, 16))
-                                   .withVisual('indianred', 'black', 2)
+                                   .withVisual('indianred', 'black', 0.25)
                                    .build()
         
     }
@@ -42,7 +42,7 @@ export default class ShipComponentFactory
         return ShipComponentBuilder.create()
                                    .withComponentType('radar')                                   
                                    .withPoints(ShipComponentFactory.createSpeherePoints(5, 8))
-                                   .withVisual('forestgreen', 'black', 2)                               
+                                   .withVisual('forestgreen', 'black', 0.25)                               
                                    .build()        
     }
 

@@ -45,7 +45,7 @@ export function getSimulationPolygonData(component: IShipComponent, simPos: IPoi
         transform: `rotate(${simRotation} ${simPos.x*scale} ${simPos.y*scale} ) translate(${simPos.x*scale} ${simPos.y*scale})`,
         fillColor: component.fillColor,
         strokeColor: component.strokeColor,
-        strokeWidth: component.strokeWidth
+        strokeWidth: component.strokeWidth*10
     };
 }
 
