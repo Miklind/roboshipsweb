@@ -2,6 +2,13 @@ This is React skill demostration app by Mikko Lindfors. It is partial remake of 
 
 Made with: next.js, tailwindcss and DaisyUI
 
+## TODO:
+
+- Actual simulation
+- More ship components and program commands
+- Database for ships and users
+- Login system
+
 ## Getting Started
 
 Install required modules
