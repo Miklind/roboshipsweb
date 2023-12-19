@@ -14,17 +14,31 @@ function clamp(value: number, min: number, max: number): number {
     return Math.min(Math.max(value, min), max);
 }
 
-export function simulateStep(simState: ISimulationState, editorState: IShipEditorState, deltaTime: number): ISimulationState {
-    let newsimState : ISimulationState = { simTime: simState.simTime + deltaTime, ships: []}
- 
-    newsimState.ships = simState.ships.map(ship => {
+function cloneSimulationState(state: ISimulationState): ISimulationState {
+    
+    let newShips = state.ships.map(ship => {
+        let cloneComponents = ship.components.map(component => {
+            return { ...component }
+        })
 
-       let moveDirection : IPoint = { x: Math.sin(degreesToRadians(ship.rotation)), y: -Math.cos(degreesToRadians(ship.rotation)) }
-        
-       return { ...ship, position: { x: clamp(ship.position.x + deltaTime * ship.speed * moveDirection.x,0,1000), y: clamp(ship.position.y + deltaTime * ship.speed * moveDirection.y,0,1000) }}        
+        let cloneProgram = { ...ship.program }
 
-       
+        return { ...ship, components: cloneComponents, program: cloneProgram }
     })
+    let newState = { ...state, ships: newShips }
+    return newState
+}
+
+export function simulate(simState: ISimulationState, editorState: IShipEditorState, deltaTime: number): ISimulationState {
+        
+    let newSimState : ISimulationState = cloneSimulationState(simState)
  
-    return newsimState
+    newSimState.ships.forEach(ship => {
+        let moveDirection : IPoint = { x: Math.sin(degreesToRadians(ship.rotation)), y: -Math.cos(degreesToRadians(ship.rotation)) } 
+        ship.position.x += moveDirection.x * ship.speed * deltaTime;
+    })
+
+    newSimState.simTime += deltaTime
+
+    return newSimState
 }

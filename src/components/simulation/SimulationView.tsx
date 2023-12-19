@@ -3,7 +3,7 @@ import SimulationContext, { ISimulationInitAction, ISimulationUpdateAction, simu
 import ShipEditorContext from '@/modules/shipEditorContext'
 import SimulationSVG from './SimulationSVG'
 import SimulationControls from './SimulationControls'
-import { simulateStep } from '@/modules/roboships/simulation'
+import { simulate } from '@/modules/roboships/simulation'
 
 
 export default function SimulationView() {
@@ -36,7 +36,7 @@ export default function SimulationView() {
             if(previousTimeRef.current !== -1) 
             {
                 const deltatime = timestamp - previousTimeRef.current;
-                let newSimState = simulateStep(simulationStateRef.current, state, deltatime/1000)                              
+                let newSimState = simulate(simulationStateRef.current, state, deltatime/1000)                              
                 const action: ISimulationUpdateAction = { actionType: 'update-simulation', simState: newSimState }
                 simulationDispatch(action)
             }
